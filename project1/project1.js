@@ -262,24 +262,125 @@ function calculateTeamSelection() {
 }
 
 function calculateGalois() {
-    const total = factorialBigInt(6);
-    const favorable = factorialBigInt(3) * factorialBigInt(3);
-    const divisor = gcdBigInt(favorable, total);
+    try {
+        const input = getElement("galois-word").value;
+        const vowelsInput = getElement("galois-vowels").value;
 
-    const reducedNumerator = favorable / divisor;
-    const reducedDenominator = total / divisor;
-    const percentage = Number(favorable * 10000n / total) / 100;
+        const normalized = input
+            .toUpperCase()
+            .replace(/[^A-Z]/g, "");
 
-    setResult(
-        "galois-result",
-        `
-            Total arrangements: <strong>6! = ${formatBigInt(total)}</strong><br>
-            Favorable arrangements: <strong>3! × 3! = ${formatBigInt(favorable)}</strong><br>
-            Probability: <strong>${formatBigInt(favorable)} / ${formatBigInt(total)}</strong><br>
-            Reduced fraction: <strong>${reducedNumerator.toString()} / ${reducedDenominator.toString()}</strong><br>
-            Percentage: <strong>${percentage.toFixed(2)}%</strong>
-        `
-    );
+        const vowelsText = vowelsInput
+            .toUpperCase()
+            .replace(/[^A-Z]/g, "");
+
+        if (normalized.length === 0) {
+            throw new Error("Please enter at least one English letter.");
+        }
+
+        if (vowelsText.length === 0) {
+            throw new Error("Please enter at least one vowel.");
+        }
+
+        validateRange(normalized.length, 1, MAX_FACTORIAL_INPUT, "Word length");
+
+        const vowelSet = new Set(Array.from(vowelsText));
+        const letterCounts = new Map();
+
+        let vowelCount = 0;
+        let consonantCount = 0;
+
+        for (const character of Array.from(normalized)) {
+            letterCounts.set(
+                character,
+                (letterCounts.get(character) || 0) + 1
+            );
+
+            if (vowelSet.has(character)) {
+                vowelCount += 1;
+            } else {
+                consonantCount += 1;
+            }
+        }
+
+        const totalLetters = normalized.length;
+
+        const totalPositionArrangements = factorialBigInt(totalLetters);
+        const favorablePositionArrangements =
+            factorialBigInt(vowelCount) * factorialBigInt(consonantCount);
+
+        const divisor = gcdBigInt(
+            favorablePositionArrangements,
+            totalPositionArrangements
+        );
+
+        const reducedNumerator = favorablePositionArrangements / divisor;
+        const reducedDenominator = totalPositionArrangements / divisor;
+
+        const percentage =
+            Number(
+                (favorablePositionArrangements * 1000000n)
+                / totalPositionArrangements
+            ) / 10000;
+
+        let allRepeatedDenominator = 1n;
+        let vowelRepeatedDenominator = 1n;
+        let consonantRepeatedDenominator = 1n;
+
+        for (const [character, count] of letterCounts.entries()) {
+            const repeatedFactorial = factorialBigInt(count);
+
+            allRepeatedDenominator *= repeatedFactorial;
+
+            if (vowelSet.has(character)) {
+                vowelRepeatedDenominator *= repeatedFactorial;
+            } else {
+                consonantRepeatedDenominator *= repeatedFactorial;
+            }
+        }
+
+        const totalDistinctArrangements =
+            totalPositionArrangements / allRepeatedDenominator;
+
+        const favorableDistinctArrangements =
+            (factorialBigInt(vowelCount) / vowelRepeatedDenominator)
+            * (factorialBigInt(consonantCount) / consonantRepeatedDenominator);
+
+        setResult(
+            "galois-result",
+            `
+                Word: <strong>${normalized}</strong><br>
+                Vowels: <strong>${vowelCount}</strong>,
+                consonants: <strong>${consonantCount}</strong><br><br>
+
+                Total position arrangements:
+                <strong>${totalLetters}! = ${formatBigInt(totalPositionArrangements)}</strong><br>
+
+                Favorable position arrangements:
+                <strong>${vowelCount}! × ${consonantCount}! =
+                ${formatBigInt(favorablePositionArrangements)}</strong><br><br>
+
+                Probability:
+                <strong>${formatBigInt(favorablePositionArrangements)}
+                / ${formatBigInt(totalPositionArrangements)}</strong><br>
+
+                Reduced fraction:
+                <strong>${reducedNumerator.toString()}
+                / ${reducedDenominator.toString()}</strong><br>
+
+                Percentage:
+                <strong>${percentage.toFixed(4)}%</strong><br><br>
+
+                Distinct written arrangements:
+                <strong>${formatBigInt(totalDistinctArrangements)}</strong><br>
+
+                Distinct favorable arrangements:
+                <strong>${formatBigInt(favorableDistinctArrangements)}</strong>
+            `
+        );
+    } catch (error) {
+        setResult("galois-result", error.message, true);
+    }
 }
 
 function enableNavigationWheelScroll() {
