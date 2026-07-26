@@ -564,18 +564,37 @@
                     </article>
 
                     <article class="calculator-card">
-                        <h3>Automatic calculation</h3>
+                        <h3>Word arrangement calculator</h3>
 
                         <div class="calculator-box">
                             <p class="calculator-note">
-                                This calculator uses the fixed lecture example:
-                                the word GALOIS has 3 vowels and 3 consonants.
+                                The default example is GALOIS, but you can enter another word.
+                                The calculator finds the probability that all vowels appear before
+                                all consonants.
                             </p>
-
+                    
+                            <label class="input-group" for="galois-word">
+                                <span>Word or sequence</span>
+                                <input
+                                    type="text"
+                                    id="galois-word"
+                                    value="GALOIS"
+                                >
+                            </label>
+                    
+                            <label class="input-group" for="galois-vowels">
+                                <span>Vowels</span>
+                                <input
+                                    type="text"
+                                    id="galois-vowels"
+                                    value="AEIOU"
+                                >
+                            </label>
+                    
                             <button type="button" class="calculator-button" id="galois-button">
-                                Calculate GALOIS probability
+                                Calculate probability
                             </button>
-
+                    
                             <div class="calculator-result" id="galois-result" aria-live="polite">
                                 Result will appear here.
                             </div>
