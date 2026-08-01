@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Project 2 | Hamming Code</title>
+
+    <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+    <link rel="stylesheet" href="../project.css">
+    <script src="project2.js" defer></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <header class="top-panel">
+            <a href="../index.html" class="logo" aria-label="Go to main page">
+                IT
+            </a>
+
+            <nav class="project-navigation" aria-label="Project navigation">
+                <a href="#overview">Overview</a>
+                <a href="#xor">XOR</a>
+                <a href="#structure">Structure</a>
+                <a href="#encoder">Encoder</a>
+                <a href="#checker">Error Check</a>
+                <a href="#sources">Sources</a>
+            </nav>
+        </header>
+
+        <main>
+
+            <section class="project-hero" id="top">
+                <p class="course-label">Information Theory</p>
+
+                <h1>Project 2</h1>
+
+                <h2>Hamming Code</h2>
+
+                <p class="hero-description">
+                    Interactive educational page about XOR, parity bits,
+                    Hamming encoding, error detection and one-bit error
+                    correction.
+                </p>
+
+                <div class="hero-meta">
+                    <div class="meta-card">
+                        <span class="meta-label">Student</span>
+                        <strong>Ales Zhirnel</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Instructor</span>
+                        <strong>Andrzej Jaroszewicz</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Input limit</span>
+                        <strong>1024 data bits</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="overview">
+                <div class="section-heading">
+                    <p class="section-label">Overview</p>
+                    <h2>What this project is about</h2>
+                    <p class="section-description">
+                        Hamming code adds parity bits to data bits. These parity
+                        bits make it possible to detect and correct a single-bit
+                        error in the received code.
+                    </p>
+                </div>
+
+                <div class="section-card wide-card">
+                    <div class="text-block">
+                        <h3>Main idea</h3>
+
+                        <p>
+                            A binary message can be protected by adding control
+                            bits. In a standard Hamming code, the control bits
+                            are placed at positions that are powers of two:
+                            1, 2, 4, 8, 16 and so on.
+                        </p>
+
+                        <p>
+                            This page starts with the classical seven-bit example,
+                            but the calculator also supports longer user-defined
+                            binary sequences.
+                        </p>
+                    </div>
+
+                    <div class="formula-card">
+                        <span class="formula-label">Parity condition</span>
+                        <code>2^r ≥ m + r + 1</code>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="xor">
+                <div class="section-heading">
+                    <p class="section-label">Part 01</p>
+                    <h2>XOR Operation</h2>
+                    <p class="section-description">
+                        XOR is the basic operation used to calculate parity bits.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="theory-card">
+                        <h3>Theory</h3>
+
+                        <p>
+                            XOR returns 1 when the number of ones is odd and
+                            returns 0 when the number of ones is even.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>0 ⊕ 0 = 0, 0 ⊕ 1 = 1, 1 ⊕ 0 = 1, 1 ⊕ 1 = 0</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Example</span>
+                            <h4>Three bits</h4>
+                            <p>
+                                If the checked bits are 1, 0 and 1, then the
+                                number of ones is even.
+                            </p>
+                            <p class="example-formula">
+                                1 ⊕ 0 ⊕ 1 = 0
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="calculator-card">
+                        <h3>XOR mini-calculator</h3>
+
+                        <div class="calculator-box">
+                            <label class="input-group" for="xor-bits">
+                                <span>Binary sequence</span>
+                                <input
+                                    type="text"
+                                    id="xor-bits"
+                                    value="101"
+                                    placeholder="For example: 101"
+                                >
+                            </label>
+
+                            <button type="button" class="calculator-button" id="xor-button">
+                                Calculate XOR
+                            </button>
+
+                            <div class="calculator-result" id="xor-result" aria-live="polite">
+                                Result will appear here.
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="content-section" id="structure">
+                <div class="section-heading">
+                    <p class="section-label">Part 02</p>
+                    <h2>Hamming Code Structure</h2>
+                    <p class="section-description">
+                        Parity bits are placed at positions that are powers of
+                        two. All other positions are used for data bits.
+                    </p>
+                </div>
+
+                <div class="section-card wide-card">
+                    <div class="text-block">
+                        <h3>Seven-bit example</h3>
+
+                        <p>
+                            For four data bits, three parity bits are needed.
+                            This produces a seven-bit Hamming code.
+                        </p>
+
+                        <p>
+                            The dynamic calculator below uses this example as
+                            the default input, but it can encode up to
+                            <strong>1024 data bits</strong>.
+                        </p>
+                    </div>
+
+                    <div class="formula-card">
+                        <span class="formula-label">Hamming(7,4)</span>
+                        <code>p1 p2 d1 p4 d2 d3 d4</code>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="encoder">
+                <div class="section-heading">
+                    <p class="section-label">Part 03</p>
+                    <h2>Encoding Calculator</h2>
+                    <p class="section-description">
+                        Enter up to 1024 data bits. The calculator automatically
+                        adds the required parity bits and builds the encoded
+                        Hamming code.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="calculator-card">
+                        <h3>Input data bits</h3>
+
+                        <div class="calculator-box">
+                            <p class="calculator-note">
+                                Limit: <strong>1024 data bits</strong>.
+                                Non-binary characters are ignored automatically.
+                            </p>
+
+                            <div class="input-limit-status" id="data-limit-status">
+                                <span class="status-led" aria-hidden="true"></span>
+                                <span class="status-text" id="data-status-text">
+                                    0 / 1024 data bits used. Input space available.
+                                </span>
+                            </div>
+
+                            <label class="input-group" for="data-bits">
+                                <span>Data bits</span>
+                                <textarea
+                                    id="data-bits"
+                                    spellcheck="false"
+                                    placeholder="Enter binary data, for example: 1011"
+                                >1011</textarea>
+                            </label>
+
+                            <button type="button" class="calculator-button" id="encode-button">
+                                Encode data bits
+                            </button>
+
+                            <div class="calculator-result" id="encode-result" aria-live="polite">
+                                Result will appear here.
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>How parity bits are chosen</h3>
+
+                        <p>
+                            The number of parity bits is calculated from the
+                            condition below. Here m is the number of data bits
+                            and r is the number of parity bits.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>2^r ≥ m + r + 1</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Example</span>
+                            <h4>Input 1011</h4>
+                            <p>
+                                For 4 data bits, 3 parity bits are needed.
+                                The final code has 7 bits.
+                            </p>
+                            <p class="example-formula">
+                                2^3 = 8, and 4 + 3 + 1 = 8
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Encoded bit grid</h3>
+                    <p>
+                        Parity bits are highlighted separately from data bits.
+                        The grid automatically adapts to the length of the input.
+                    </p>
+
+                    <div class="binary-output" id="encoded-output">
+                        Encoded sequence will appear here.
+                    </div>
+
+                    <div class="bit-grid" id="encoded-grid" aria-live="polite"></div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>XOR explanation</h3>
+                    <p>
+                        Each row shows which positions are checked by a parity
+                        bit. Long lists are shortened for readability.
+                    </p>
+
+                    <div class="xor-list" id="xor-list"></div>
+                </div>
+            </section>
+
+            <section class="content-section" id="checker">
+                <div class="section-heading">
+                    <p class="section-label">Part 04</p>
+                    <h2>Error Detection and Correction</h2>
+                    <p class="section-description">
+                        Enter a received code. The calculator computes the
+                        syndrome, detects a one-bit error and shows the corrected
+                        sequence.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="calculator-card">
+                        <h3>Received code</h3>
+
+                        <div class="calculator-box">
+                            <p class="calculator-note">
+                                Limit: <strong>1035 received bits</strong>.
+                                This is the encoded size for 1024 data bits.
+                            </p>
+
+                            <div class="input-limit-status" id="received-limit-status">
+                                <span class="status-led" aria-hidden="true"></span>
+                                <span class="status-text" id="received-status-text">
+                                    0 / 1035 received bits used. Input space available.
+                                </span>
+                            </div>
+
+                            <label class="input-group" for="received-bits">
+                                <span>Received bits</span>
+                                <textarea
+                                    id="received-bits"
+                                    spellcheck="false"
+                                    placeholder="Encode data first or enter a received code manually"
+                                ></textarea>
+                            </label>
+
+                            <div class="button-row">
+                                <button type="button" class="calculator-button" id="load-encoded-button">
+                                    Use encoded code
+                                </button>
+
+                                <button type="button" class="calculator-button secondary-button" id="flip-random-button">
+                                    Flip random bit
+                                </button>
+                            </div>
+
+                            <button type="button" class="calculator-button" id="check-button">
+                                Check received code
+                            </button>
+
+                            <div class="calculator-result" id="check-result" aria-live="polite">
+                                Result will appear here.
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>Syndrome</h3>
+
+                        <p>
+                            During error checking, every parity group is checked
+                            again. Failed parity checks form a binary number
+                            called the syndrome.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>syndrome = p1 + 2p2 + 4p4 + 8p8 + ...</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Example</span>
+                            <h4>Error position</h4>
+                            <p>
+                                If the syndrome is 5, the calculator points to
+                                position 5 and flips that bit to correct the code.
+                            </p>
+                            <p class="example-formula">
+                                5 = 1 + 4, so checks p1 and p4 failed.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Received bit grid</h3>
+                    <p>
+                        If a one-bit error is detected, the incorrect bit is
+                        highlighted in red.
+                    </p>
+
+                    <div class="binary-output" id="corrected-output">
+                        Corrected sequence will appear here.
+                    </div>
+
+                    <div class="bit-grid" id="received-grid" aria-live="polite"></div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Syndrome explanation</h3>
+                    <p>
+                        Failed parity checks are combined into the final error
+                        position.
+                    </p>
+
+                    <div class="xor-list" id="syndrome-list"></div>
+                </div>
+            </section>
+
+            <section class="back-home-section" aria-label="Back to main page">
+                <a href="../index.html" class="back-home-button">
+                    Back to Main Page
+                </a>
+            </section>
+
+            <section class="content-section" id="sources">
+                <div class="section-heading">
+                    <p class="section-label">Sources</p>
+                    <h2>Materials used</h2>
+                    <p class="section-description">
+                        Course materials used for the project.
+                    </p>
+                </div>
+
+                <div class="source-grid">
+                    <a
+                        href="https://boole.bsite.net/Projects/2/"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">01</span>
+                        <h3>Project 2 page</h3>
+                        <p>
+                            Original project page from the course website.
+                        </p>
+                    </a>
+
+                    <a
+                        href="https://boole.bsite.net/Projects/2/2.pdf"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">02</span>
+                        <h3>Project 2 PDF</h3>
+                        <p>
+                            Course material about Boolean operations and program structure.
+                        </p>
+                    </a>
+
+                    <a
+                        href="https://boole.bsite.net/Projects/2/2.1.pdf"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">03</span>
+                        <h3>Hamming Code PDF</h3>
+                        <p>
+                            Course material about Hamming code and error checking.
+                        </p>
+                    </a>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <footer>
+        Project 2 · Information Theory · Ales Zhirnel
+    </footer>
+
+</body>
+</html>
