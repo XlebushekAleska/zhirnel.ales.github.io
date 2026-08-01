@@ -1025,3 +1025,475 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+
+
+/* ---------- Project 2 additions: status indicator ---------- */
+
+.input-limit-status {
+    padding: 0.75rem 0.9rem;
+
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.18);
+
+    border-radius: 999rem;
+
+    color: var(--secondary-text);
+    background-color: rgba(255, 255, 255, 0.62);
+
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.status-led {
+    width: 0.85rem;
+    min-width: 0.85rem;
+    aspect-ratio: 1 / 1;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            #ffffff,
+            #6fffd2 25%,
+            #4fc8ff 64%,
+            #3b7cff 100%
+        );
+
+    box-shadow:
+        0 0 0.25rem rgba(111, 255, 210, 0.7),
+        0 0 0.8rem rgba(79, 200, 255, 0.75),
+        0 0 1.45rem rgba(95, 110, 232, 0.45);
+
+    animation: statusLedPulse 1.8s ease-in-out infinite;
+}
+
+.input-limit-status.is-full {
+    color: #9b1f3f;
+    border-color: rgba(255, 40, 80, 0.35);
+    background-color: rgba(255, 230, 236, 0.84);
+}
+
+.input-limit-status.is-full .status-led {
+    background:
+        radial-gradient(
+            circle at 35% 35%,
+            #ffffff,
+            #ff9dad 22%,
+            #ff2f5f 58%,
+            #ba1238 100%
+        );
+
+    box-shadow:
+        0 0 0.25rem rgba(255, 90, 120, 0.9),
+        0 0 0.95rem rgba(255, 47, 95, 0.95),
+        0 0 1.7rem rgba(255, 47, 95, 0.7);
+
+    animation: statusLedAlert 0.9s ease-in-out infinite;
+}
+
+@keyframes statusLedPulse {
+    0%, 100% {
+        transform: scale(0.96);
+        filter: saturate(1);
+    }
+
+    50% {
+        transform: scale(1.12);
+        filter: saturate(1.35);
+    }
+}
+
+@keyframes statusLedAlert {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.18);
+    }
+}
+
+
+/* ---------- Project 2 additions: textarea and buttons ---------- */
+
+.input-group textarea {
+    width: 100%;
+    min-height: 7rem;
+
+    padding: 0.8rem 0.9rem;
+
+    resize: vertical;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.18);
+
+    border-radius: 0.85rem;
+
+    color: var(--main-text);
+    background-color: rgba(255, 255, 255, 0.82);
+
+    font:
+        600
+        1rem
+        Consolas,
+        "Courier New",
+        monospace;
+
+    outline: none;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease;
+}
+
+.input-group textarea:focus {
+    border-color: rgba(95, 110, 232, 0.55);
+    background-color: rgba(255, 255, 255, 0.95);
+
+    box-shadow:
+        0 0 0 0.25rem
+        rgba(95, 110, 232, 0.12);
+}
+
+.button-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.secondary-button {
+    color: var(--accent-dark);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.95),
+            rgba(235, 238, 255, 0.9)
+        );
+}
+
+
+/* ---------- Project 2 additions: visualization blocks ---------- */
+
+.visualization-card {
+    width: 100%;
+
+    margin-top: clamp(1.2rem, 3vw, 2rem);
+    padding: clamp(1.35rem, 3vw, 2rem);
+
+    position: relative;
+
+    border:
+        0.08rem
+        solid
+        var(--card-border);
+
+    border-radius: clamp(1.2rem, 2vw, 1.65rem);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.92),
+            rgba(255, 255, 255, 0.72)
+        );
+
+    box-shadow:
+        var(--strong-shadow),
+        inset 0 0 0 0.08rem rgba(255, 255, 255, 0.36);
+
+    backdrop-filter: blur(1rem);
+}
+
+.visualization-card::before {
+    content: "";
+
+    position: absolute;
+    top: 0;
+    left: clamp(1rem, 3vw, 1.6rem);
+    right: clamp(1rem, 3vw, 1.6rem);
+
+    height: 0.22rem;
+    border-radius: 999rem;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--accent),
+            #a777e8
+        );
+}
+
+.visualization-card h3 {
+    margin: 0 0 0.8rem;
+
+    color: var(--main-text);
+
+    font-size: clamp(1.2rem, 2.5vw, 1.45rem);
+}
+
+.visualization-card p {
+    margin:
+        0
+        0
+        0.85rem;
+
+    color: var(--secondary-text);
+
+    font-size: clamp(0.96rem, 1.8vw, 1.04rem);
+    line-height: 1.65;
+}
+
+.binary-output {
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.16);
+
+    border-radius: 1rem;
+
+    color: var(--accent-dark);
+    background-color: rgba(95, 110, 232, 0.09);
+
+    font:
+        800
+        0.95rem
+        Consolas,
+        "Courier New",
+        monospace;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ---------- Project 2 additions: bit grid ---------- */
+
+.bit-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(3.8rem, 1fr)
+        );
+
+    gap: 0.65rem;
+
+    margin-top: 1rem;
+}
+
+.bit-cell {
+    min-height: 4rem;
+
+    padding: 0.65rem 0.45rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.18);
+
+    border-radius: 0.95rem;
+
+    color: var(--main-text);
+    background-color: rgba(255, 255, 255, 0.72);
+
+    box-shadow:
+        0 0.45rem 1rem
+        rgba(64, 74, 130, 0.08);
+}
+
+.bit-cell.parity-bit {
+    border-color: rgba(95, 110, 232, 0.35);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(95, 110, 232, 0.16),
+            rgba(167, 119, 232, 0.14)
+        );
+}
+
+.bit-cell.data-bit {
+    background-color: rgba(255, 255, 255, 0.78);
+}
+
+.bit-cell.error-bit {
+    border-color: rgba(180, 50, 85, 0.45);
+
+    background-color: rgba(255, 220, 230, 0.86);
+
+    box-shadow:
+        0 0.6rem 1.4rem rgba(180, 50, 85, 0.16),
+        0 0 1.4rem rgba(180, 50, 85, 0.22);
+}
+
+.bit-cell.corrected-bit {
+    border-color: rgba(60, 150, 100, 0.45);
+    background-color: rgba(225, 255, 238, 0.86);
+}
+
+.bit-position {
+    color: var(--secondary-text);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.bit-value {
+    margin-top: 0.25rem;
+
+    color: var(--main-text);
+
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.bit-type {
+    margin-top: 0.15rem;
+
+    color: var(--accent-dark);
+
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+/* ---------- Project 2 additions: XOR explanation ---------- */
+
+.xor-list {
+    display: grid;
+    gap: 0.8rem;
+
+    margin-top: 1rem;
+}
+
+.xor-row {
+    padding: 0.9rem 1rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.16);
+
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.66);
+}
+
+.xor-row.check-failed {
+    border-color: rgba(180, 50, 85, 0.26);
+    background-color: rgba(255, 230, 236, 0.72);
+}
+
+.xor-row.check-passed {
+    border-color: rgba(60, 150, 100, 0.22);
+    background-color: rgba(235, 255, 244, 0.62);
+}
+
+.xor-row h4 {
+    margin: 0 0 0.45rem;
+
+    color: var(--main-text);
+
+    font-size: 1rem;
+}
+
+.xor-row p {
+    margin: 0;
+
+    color: var(--secondary-text);
+
+    font-size: 0.92rem;
+    line-height: 1.55;
+}
+
+.xor-expression {
+    margin-top: 0.45rem !important;
+
+    color: var(--accent-dark) !important;
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+
+/* ---------- Project 2 additions: compact result chips ---------- */
+
+.compact-result {
+    display: grid;
+    gap: 0.7rem;
+
+    margin-top: 1rem;
+}
+
+.result-chip {
+    padding: 0.75rem 0.9rem;
+
+    border-radius: 999rem;
+
+    color: var(--accent-dark);
+    background-color: var(--accent-light);
+
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-align: center;
+}
+
+.result-chip.error {
+    color: #8f2f4a;
+    background-color: rgba(255, 220, 230, 0.86);
+}
+
+.result-chip.success {
+    color: #2f7a52;
+    background-color: rgba(225, 255, 238, 0.86);
+}
+
+
+/* ---------- Project 2 additions: responsive fixes ---------- */
+
+@media (max-width: 42rem) {
+
+    .button-row {
+        grid-template-columns: 1fr;
+    }
+
+    .bit-grid {
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(3.2rem, 1fr)
+            );
+    }
+
+    .bit-cell {
+        min-height: 3.6rem;
+    }
+
+    .bit-value {
+        font-size: 1.15rem;
+    }
+}
