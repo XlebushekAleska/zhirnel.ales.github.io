@@ -1497,3 +1497,26 @@ footer {
         font-size: 1.15rem;
     }
 }
+
+
+/* ---------- Hamming limitation warning ---------- */
+
+.limitation-box {
+    border-left-color: #e19328;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 243, 213, 0.84),
+            rgba(255, 235, 225, 0.74)
+        );
+}
+
+.limitation-box .example-label {
+    color: #8b570d;
+    background-color: rgba(225, 147, 40, 0.16);
+}
+
+.limitation-box .example-formula {
+    color: #8b570d !important;
+}
