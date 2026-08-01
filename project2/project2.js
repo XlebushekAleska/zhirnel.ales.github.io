@@ -395,8 +395,13 @@ function checkReceivedCode() {
 
         if (syndrome === 0) {
             resultHtml = `
-                <strong>No error detected.</strong><br>
-                Syndrome: <strong>0</strong>
+                <strong>Syndrome = 0.</strong><br>
+                The sequence satisfies all Hamming parity checks.<br><br>
+                
+                <span class="muted">
+                    This does not guarantee that multiple bit errors have not transformed
+                    the message into another valid codeword.
+                </span>
             `;
         } else if (syndrome <= totalLength) {
             errorPosition = syndrome;
@@ -405,10 +410,20 @@ function checkReceivedCode() {
             correctedBits = correctedArray.join("");
 
             resultHtml = `
-                <strong>One-bit error detected.</strong><br>
+                <strong>Non-zero syndrome detected.</strong><br>
+                Assuming that exactly one bit was corrupted:<br>
                 Syndrome: <strong>${syndrome}</strong><br>
-                Error position: <strong>${errorPosition}</strong><br>
-                Corrected bit: <strong>${receivedBits[errorPosition - 1]} → ${correctedBits[errorPosition - 1]}</strong>
+                Suspected error position: <strong>${errorPosition}</strong><br>
+                Corrected bit:
+                <strong>
+                    ${receivedBits[errorPosition - 1]}
+                    →
+                    ${correctedBits[errorPosition - 1]}
+                </strong><br><br>
+                
+                <span class="muted">
+                    With two or more changed bits, this correction may be incorrect.
+                </span>
             `;
         } else {
             resultHtml = `
