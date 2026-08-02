@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Project 3 | Shannon Entropy</title>
+
+    <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+    <link rel="stylesheet" href="../project.css">
+    <script src="project3.js" defer></script>
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+        <header class="top-panel">
+            <a href="../index.html" class="logo" aria-label="Go to main page">
+                IT
+            </a>
+
+            <nav class="project-navigation" aria-label="Project navigation">
+                <a href="#overview">Overview</a>
+                <a href="#information">Information</a>
+                <a href="#entropy">Entropy</a>
+                <a href="#distribution">Distribution</a>
+                <a href="#text-analyzer">Text</a>
+                <a href="#approximations">Approximations</a>
+                <a href="#sources">Sources</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="project-hero" id="top">
+                <p class="course-label">Information Theory</p>
+
+                <h1>Project 3</h1>
+
+                <h2>Shannon Entropy</h2>
+
+                <p class="hero-description">
+                    Interactive entropy calculators, text analysis, Huffman coding
+                    and two dynamic tree visualizations.
+                </p>
+
+                <div class="hero-meta">
+                    <div class="meta-card">
+                        <span class="meta-label">Student</span>
+                        <strong>Ales Zhirnel</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Instructor</span>
+                        <strong>Andrzej Jaroszewicz</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Visualizations</span>
+                        <strong>2 dynamic Huffman trees</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="overview">
+                <div class="section-heading">
+                    <p class="section-label">Overview</p>
+                    <h2>What this project is about</h2>
+                    <p class="section-description">
+                        Shannon entropy measures the average uncertainty of a
+                        probability distribution. Huffman coding turns the same
+                        probabilities into efficient variable-length binary codes.
+                    </p>
+                </div>
+
+                <div class="section-card wide-card">
+                    <div class="text-block">
+                        <h3>From probability to code length</h3>
+
+                        <p>
+                            Rare outcomes carry more information than common ones.
+                            Entropy combines the information of all outcomes into
+                            one average value measured in bits.
+                        </p>
+
+                        <p>
+                            Huffman coding uses the probabilities to build a binary
+                            tree. Frequent symbols receive shorter paths, while rare
+                            symbols receive longer paths.
+                        </p>
+                    </div>
+
+                    <div class="formula-card">
+                        <span class="formula-label">Main formula</span>
+                        <code>H(X) = -Σ pᵢ log₂(pᵢ)</code>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="information">
+                <div class="section-heading">
+                    <p class="section-label">Part 01</p>
+                    <h2>Self-Information</h2>
+                    <p class="section-description">
+                        Self-information measures how surprising one outcome is.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="theory-card">
+                        <h3>Information of one event</h3>
+
+                        <p>
+                            An outcome with probability 1 is completely predictable
+                            and carries 0 bits of new information. A less probable
+                            outcome carries more information.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>I(xᵢ) = log₂(1 / pᵢ) = -log₂(pᵢ)</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Example</span>
+                            <h4>Probability 1/8</h4>
+                            <p>
+                                An event with probability 0.125 carries three bits
+                                of self-information.
+                            </p>
+                            <p class="example-formula">
+                                I = log₂(8) = 3 bits
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="calculator-card">
+                        <h3>Self-information calculator</h3>
+
+                        <div class="calculator-box">
+                            <label class="input-group" for="self-probability">
+                                <span>Probability p</span>
+                                <input
+                                    type="number"
+                                    id="self-probability"
+                                    min="0.000000001"
+                                    max="1"
+                                    step="any"
+                                    value="0.125"
+                                >
+                            </label>
+
+                            <button
+                                type="button"
+                                class="calculator-button"
+                                id="self-information-button"
+                            >
+                                Calculate information
+                            </button>
+
+                            <div
+                                class="calculator-result"
+                                id="self-information-result"
+                                aria-live="polite"
+                            >
+                                Result will appear here.
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="content-section" id="entropy">
+                <div class="section-heading">
+                    <p class="section-label">Part 02</p>
+                    <h2>Shannon Entropy</h2>
+                    <p class="section-description">
+                        Entropy is the probability-weighted average of the
+                        self-information values.
+                    </p>
+                </div>
+
+                <div class="section-card wide-card">
+                    <div class="text-block">
+                        <h3>Minimum and maximum</h3>
+
+                        <p>
+                            Entropy is 0 when one outcome has probability 1. For
+                            n possible outcomes, entropy is largest when all
+                            probabilities are equal.
+                        </p>
+
+                        <p>
+                            The maximum possible value is log₂(n). A distribution
+                            close to this maximum is highly uncertain; a distribution
+                            close to 0 is highly predictable.
+                        </p>
+                    </div>
+
+                    <div class="formula-card">
+                        <span class="formula-label">Maximum entropy</span>
+                        <code>Hmax = log₂(n)</code>
+                    </div>
+                </div>
+
+                <div class="entropy-example-grid">
+                    <div class="entropy-example-card">
+                        <span>Predictable</span>
+                        <strong>1, 0, 0, 0</strong>
+                        <small>H = 0 bits</small>
+                    </div>
+
+                    <div class="entropy-example-card">
+                        <span>Unequal</span>
+                        <strong>0.5, 0.25, 0.125, 0.125</strong>
+                        <small>H = 1.75 bits</small>
+                    </div>
+
+                    <div class="entropy-example-card">
+                        <span>Uniform</span>
+                        <strong>0.25, 0.25, 0.25, 0.25</strong>
+                        <small>H = 2 bits</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="distribution">
+                <div class="section-heading">
+                    <p class="section-label">Part 03</p>
+                    <h2>Probability Distribution Calculator</h2>
+                    <p class="section-description">
+                        Enter symbols and probabilities. The calculator finds the
+                        entropy, builds Huffman codes and redraws the tree.
+                    </p>
+                </div>
+
+                <div class="section-grid distribution-layout">
+                    <article class="calculator-card">
+                        <h3>Distribution input</h3>
+
+                        <div class="calculator-box">
+                            <p class="calculator-note">
+                                Enter decimal probabilities or percentages. The
+                                total must equal 1 (100%). Up to 64 outcomes are
+                                supported.
+                            </p>
+
+                            <div class="probability-editor" id="probability-editor">
+                                <div class="probability-header" aria-hidden="true">
+                                    <span>Symbol</span>
+                                    <span>Probability</span>
+                                    <span></span>
+                                </div>
+
+                                <div id="probability-rows"></div>
+                            </div>
+
+                            <div class="button-row three-button-row">
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="add-probability-row"
+                                >
+                                    Add outcome
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="normalize-probabilities"
+                                >
+                                    Normalize
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button"
+                                    id="calculate-distribution"
+                                >
+                                    Calculate
+                                </button>
+                            </div>
+
+                            <div class="button-row">
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="load-uniform-example"
+                                >
+                                    Uniform example
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="load-unequal-example"
+                                >
+                                    Unequal example
+                                </button>
+                            </div>
+
+                            <div
+                                class="calculator-result"
+                                id="distribution-result"
+                                aria-live="polite"
+                            >
+                                Result will appear here.
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>How Huffman coding works</h3>
+
+                        <p>
+                            The two least probable nodes are repeatedly joined.
+                            Each left branch receives 0 and each right branch
+                            receives 1.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>H(X) ≤ L̄ &lt; H(X) + 1</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Course example</span>
+                            <h4>0.5, 0.25, 0.125, 0.125</h4>
+                            <p>
+                                One valid set of Huffman codes is 0, 10, 110 and
+                                111. The average code length is 1.75 bits.
+                            </p>
+                            <p class="example-formula">
+                                1×0.5 + 2×0.25 + 3×0.125 + 3×0.125 = 1.75
+                            </p>
+                        </div>
+
+                        <div class="example-box limitation-box">
+                            <span class="example-label">Important note</span>
+                            <h4>Equal probabilities</h4>
+                            <p>
+                                Several different Huffman trees may be equally
+                                correct when probabilities are tied. This page uses
+                                a stable input order so the result stays predictable.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="metric-grid" id="distribution-metrics">
+                    <div class="metric-card">
+                        <span>Entropy</span>
+                        <strong>—</strong>
+                        <small>bits per outcome</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Maximum entropy</span>
+                        <strong>—</strong>
+                        <small>bits per outcome</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Average Huffman length</span>
+                        <strong>—</strong>
+                        <small>bits per outcome</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Code efficiency</span>
+                        <strong>—</strong>
+                        <small>entropy / average length</small>
+                    </div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Distribution table</h3>
+                    <p>
+                        Hover over a row to highlight the corresponding path in
+                        the tree.
+                    </p>
+
+                    <div class="data-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Probability</th>
+                                    <th>Information</th>
+                                    <th>Entropy contribution</th>
+                                    <th>Huffman code</th>
+                                    <th>Length</th>
+                                </tr>
+                            </thead>
+                            <tbody id="distribution-table-body">
+                                <tr>
+                                    <td colspan="6" class="table-placeholder">
+                                        Calculate a distribution to fill the table.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="visualization-card">
+                    <div class="visualization-heading-row">
+                        <div>
+                            <h3>Huffman tree for probabilities</h3>
+                            <p>
+                                Hover over a leaf to highlight its route from the
+                                root. Use zoom or horizontal scrolling for wide trees.
+                            </p>
+                        </div>
+
+                        <div class="huffman-toolbar" aria-label="Distribution tree zoom controls">
+                            <button type="button" data-tree="distribution-tree" data-zoom="out">−</button>
+                            <button type="button" data-tree="distribution-tree" data-zoom="reset">Reset</button>
+                            <button type="button" data-tree="distribution-tree" data-zoom="in">+</button>
+                        </div>
+                    </div>
+
+                    <div class="huffman-tree-shell" id="distribution-tree-shell">
+                        <div class="huffman-tree-scroll">
+                            <svg
+                                class="huffman-tree-svg"
+                                id="distribution-tree"
+                                role="img"
+                                aria-label="Dynamic Huffman tree for the probability distribution"
+                            ></svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="text-analyzer">
+                <div class="section-heading">
+                    <p class="section-label">Part 04</p>
+                    <h2>Text Entropy Analyzer</h2>
+                    <p class="section-description">
+                        Analyze character frequencies, entropy, Huffman compression
+                        and the complete coding tree for any text.
+                    </p>
+                </div>
+
+                <div class="section-grid text-analyzer-layout">
+                    <article class="calculator-card">
+                        <h3>Text input</h3>
+
+                        <div class="calculator-box">
+                            <p class="calculator-note">
+                                Maximum input length: <strong>20,000 characters</strong>.
+                                The tree is displayed for up to 96 unique symbols.
+                            </p>
+
+                            <label class="input-group" for="text-input">
+                                <span>Text to analyze</span>
+                                <textarea
+                                    id="text-input"
+                                    maxlength="20000"
+                                    spellcheck="true"
+                                    placeholder="Enter or paste text here"
+                                >Мама мыла ра</textarea>
+                            </label>
+
+                            <div class="text-counter" id="text-counter">
+                                0 / 20,000 characters
+                            </div>
+
+                            <div class="toggle-grid" aria-label="Text normalization settings">
+                                <label class="toggle-option">
+                                    <input type="checkbox" id="ignore-case" checked>
+                                    <span>Ignore letter case</span>
+                                </label>
+
+                                <label class="toggle-option">
+                                    <input type="checkbox" id="ignore-spaces">
+                                    <span>Ignore whitespace</span>
+                                </label>
+
+                                <label class="toggle-option">
+                                    <input type="checkbox" id="ignore-punctuation" checked>
+                                    <span>Ignore punctuation</span>
+                                </label>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="calculator-button"
+                                id="analyze-text-button"
+                            >
+                                Analyze text
+                            </button>
+
+                            <div
+                                class="calculator-result"
+                                id="text-analysis-result"
+                                aria-live="polite"
+                            >
+                                Result will appear here.
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>Character model</h3>
+
+                        <p>
+                            Each character is treated as a possible outcome. Its
+                            frequency determines its probability and its Huffman
+                            code length.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>p(character) = count / total characters</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Interpretation</span>
+                            <h4>Bits per character</h4>
+                            <p>
+                                Text entropy estimates the average information in
+                                one character. Huffman length shows the average
+                                number of actual binary digits used by this code.
+                            </p>
+                        </div>
+
+                        <div class="example-box limitation-box">
+                            <span class="example-label">Compression note</span>
+                            <h4>Tree metadata is not free</h4>
+                            <p>
+                                The displayed compressed size counts encoded text
+                                bits only. A real file must also store or transmit
+                                the code tree, alphabet and other metadata.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="metric-grid" id="text-metrics">
+                    <div class="metric-card">
+                        <span>Characters analyzed</span>
+                        <strong>—</strong>
+                        <small>after normalization</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Unique symbols</span>
+                        <strong>—</strong>
+                        <small>alphabet size</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Entropy</span>
+                        <strong>—</strong>
+                        <small>bits per character</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Huffman length</span>
+                        <strong>—</strong>
+                        <small>bits per character</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Encoded text</span>
+                        <strong>—</strong>
+                        <small>Huffman bits</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Versus UTF-8</span>
+                        <strong>—</strong>
+                        <small>encoded bits / UTF-8 bits</small>
+                    </div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Character frequency table</h3>
+                    <p>
+                        Hover over a character row to highlight its Huffman path.
+                    </p>
+
+                    <div class="data-table-wrapper">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Character</th>
+                                    <th>Count</th>
+                                    <th>Probability</th>
+                                    <th>Information</th>
+                                    <th>Contribution</th>
+                                    <th>Huffman code</th>
+                                    <th>Length</th>
+                                </tr>
+                            </thead>
+                            <tbody id="text-table-body">
+                                <tr>
+                                    <td colspan="7" class="table-placeholder">
+                                        Analyze text to fill the table.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Huffman encoded text</h3>
+                    <p>
+                        A preview is shown for long outputs. The full encoded bit
+                        count is still calculated.
+                    </p>
+
+                    <div class="encoded-preview" id="encoded-text-preview">
+                        Encoded text will appear here.
+                    </div>
+                </div>
+
+                <div class="visualization-card">
+                    <div class="visualization-heading-row">
+                        <div>
+                            <h3>Huffman tree for text</h3>
+                            <p>
+                                The tree is rebuilt from the measured character
+                                frequencies every time the text is analyzed.
+                            </p>
+                        </div>
+
+                        <div class="huffman-toolbar" aria-label="Text tree zoom controls">
+                            <button type="button" data-tree="text-tree" data-zoom="out">−</button>
+                            <button type="button" data-tree="text-tree" data-zoom="reset">Reset</button>
+                            <button type="button" data-tree="text-tree" data-zoom="in">+</button>
+                        </div>
+                    </div>
+
+                    <div class="huffman-tree-shell" id="text-tree-shell">
+                        <div class="huffman-tree-scroll">
+                            <svg
+                                class="huffman-tree-svg"
+                                id="text-tree"
+                                role="img"
+                                aria-label="Dynamic Huffman tree for the analyzed text"
+                            ></svg>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="approximations">
+                <div class="section-heading">
+                    <p class="section-label">Part 05</p>
+                    <h2>Text Approximations</h2>
+                    <p class="section-description">
+                        Compare independent character generation with a second-order
+                        model based on neighboring character pairs.
+                    </p>
+                </div>
+
+                <div class="section-card approximation-card">
+                    <div class="approximation-controls">
+                        <div class="text-block">
+                            <h3>Generate statistical text</h3>
+                            <p>
+                                First-order generation preserves character
+                                frequencies only. Second-order generation also uses
+                                transitions from one character to the next.
+                            </p>
+                        </div>
+
+                        <label class="input-group approximation-length" for="approximation-length">
+                            <span>Generated length</span>
+                            <input
+                                type="number"
+                                id="approximation-length"
+                                min="20"
+                                max="1000"
+                                step="1"
+                                value="180"
+                            >
+                        </label>
+
+                        <button
+                            type="button"
+                            class="calculator-button"
+                            id="generate-approximations-button"
+                        >
+                            Generate new approximations
+                        </button>
+                    </div>
+
+                    <div class="approximation-grid">
+                        <article class="generated-text-card">
+                            <span class="generated-label">Original sample</span>
+                            <div class="generated-text" id="original-text-output">
+                                Analyze text first.
+                            </div>
+                        </article>
+
+                        <article class="generated-text-card">
+                            <span class="generated-label">First-order approximation</span>
+                            <div class="generated-text" id="first-order-output">
+                                Analyze text first.
+                            </div>
+                        </article>
+
+                        <article class="generated-text-card">
+                            <span class="generated-label">Second-order approximation</span>
+                            <div class="generated-text" id="second-order-output">
+                                Analyze text first.
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="back-home-section" aria-label="Back to main page">
+                <a href="../index.html" class="back-home-button">
+                    Back to Main Page
+                </a>
+            </section>
+
+            <section class="content-section" id="sources">
+                <div class="section-heading">
+                    <p class="section-label">Sources</p>
+                    <h2>Materials used</h2>
+                    <p class="section-description">
+                        Course materials used for the project.
+                    </p>
+                </div>
+
+                <div class="source-grid">
+                    <a
+                        href="https://boole.bsite.net/Projects/4/"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">01</span>
+                        <h3>Shannon Entropy Project Page</h3>
+                        <p>
+                            Original project page from the course website.
+                        </p>
+                    </a>
+
+                    <a
+                        href="https://boole.bsite.net/Handouts/Handout_8.pdf"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">02</span>
+                        <h3>Handout 8</h3>
+                        <p>
+                            Course material about entropy, binary questions,
+                            Huffman trees and statistical text approximations.
+                        </p>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <template id="probability-row-template">
+        <div class="probability-row">
+            <label class="input-group probability-symbol-group">
+                <span class="visually-hidden">Symbol</span>
+                <input
+                    type="text"
+                    class="probability-symbol"
+                    maxlength="24"
+                    placeholder="A"
+                    aria-label="Outcome symbol"
+                >
+            </label>
+
+            <label class="input-group probability-value-group">
+                <span class="visually-hidden">Probability</span>
+                <input
+                    type="text"
+                    class="probability-value"
+                    inputmode="decimal"
+                    placeholder="0.25 or 25%"
+                    aria-label="Outcome probability"
+                >
+            </label>
+
+            <button
+                type="button"
+                class="remove-row-button"
+                aria-label="Remove outcome"
+                title="Remove outcome"
+            >
+                ×
+            </button>
+        </div>
+    </template>
+
+    <footer>
+        Project 3 · Information Theory · Ales Zhirnel
+    </footer>
+
+</body>
+</html>
