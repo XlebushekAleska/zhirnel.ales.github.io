@@ -1520,3 +1520,924 @@ footer {
 .limitation-box .example-formula {
     color: #8b570d !important;
 }
+
+
+/* ==========================================================
+   Project 3 additions: Shannon entropy and Huffman coding
+   Add this entire block to the end of project.css
+   ========================================================== */
+
+.visually-hidden {
+    width: 0.0625rem;
+    height: 0.0625rem;
+
+    position: absolute;
+
+    padding: 0;
+    margin: -0.0625rem;
+
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+
+    border: 0;
+}
+
+
+/* ---------- Entropy examples ---------- */
+
+.entropy-example-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.8rem, 2vw, 1.3rem);
+
+    margin-top: clamp(1rem, 2.5vw, 1.6rem);
+}
+
+.entropy-example-card {
+    min-width: 0;
+
+    padding: clamp(1rem, 2.5vw, 1.35rem);
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(255, 255, 255, 0.82);
+
+    border-radius: 1.15rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.86),
+            rgba(243, 241, 255, 0.72)
+        );
+
+    box-shadow: var(--small-shadow);
+}
+
+.entropy-example-card span {
+    color: var(--accent);
+
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
+}
+
+.entropy-example-card strong {
+    color: var(--main-text);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size: clamp(0.92rem, 1.7vw, 1.03rem);
+    overflow-wrap: anywhere;
+}
+
+.entropy-example-card small {
+    color: var(--secondary-text);
+    font-weight: 700;
+}
+
+
+/* ---------- Probability editor ---------- */
+
+.distribution-layout,
+.text-analyzer-layout {
+    align-items: start;
+}
+
+.probability-editor {
+    min-width: 0;
+
+    display: grid;
+    gap: 0.7rem;
+}
+
+.probability-header,
+.probability-row {
+    display: grid;
+    grid-template-columns:
+        minmax(7rem, 0.85fr)
+        minmax(8rem, 1.15fr)
+        2.65rem;
+
+    gap: 0.65rem;
+    align-items: center;
+}
+
+.probability-header {
+    padding: 0 0.2rem;
+
+    color: var(--secondary-text);
+
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+#probability-rows {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.probability-row {
+    min-width: 0;
+
+    padding: 0.65rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.13);
+
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.58);
+}
+
+.probability-row .input-group,
+.probability-row input {
+    min-width: 0;
+}
+
+.remove-row-button {
+    width: 2.65rem;
+    min-width: 2.65rem;
+    aspect-ratio: 1 / 1;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        0.08rem
+        solid
+        rgba(157, 56, 86, 0.2);
+
+    border-radius: 50%;
+
+    color: #8f2f4a;
+    background-color: rgba(255, 233, 239, 0.86);
+
+    font: inherit;
+    font-size: 1.25rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.remove-row-button:hover {
+    transform: scale(1.06);
+    background-color: rgba(255, 218, 229, 0.96);
+
+    box-shadow:
+        0 0.45rem 1rem
+        rgba(143, 47, 74, 0.14);
+}
+
+.remove-row-button:focus-visible {
+    outline: 0.18rem solid rgba(143, 47, 74, 0.34);
+    outline-offset: 0.18rem;
+}
+
+.three-button-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+/* ---------- Metric cards ---------- */
+
+.metric-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(min(100%, 12rem), 1fr)
+        );
+
+    gap: clamp(0.8rem, 2vw, 1.2rem);
+
+    margin-top: clamp(1.2rem, 3vw, 2rem);
+}
+
+.metric-card {
+    min-width: 0;
+    min-height: 8.5rem;
+
+    padding: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(255, 255, 255, 0.82);
+
+    border-radius: 1.2rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.88),
+            rgba(238, 240, 255, 0.73)
+        );
+
+    box-shadow: var(--small-shadow);
+    text-align: center;
+}
+
+.metric-card span {
+    color: var(--secondary-text);
+
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.06rem;
+    text-transform: uppercase;
+}
+
+.metric-card strong {
+    color: var(--accent-dark);
+
+    font-size: clamp(1.35rem, 3vw, 1.9rem);
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+}
+
+.metric-card small {
+    color: var(--secondary-text);
+    line-height: 1.35;
+}
+
+
+/* ---------- Data tables ---------- */
+
+.data-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+
+    margin-top: 1rem;
+
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.13);
+
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.58);
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 232, 0.42) transparent;
+}
+
+.data-table-wrapper::-webkit-scrollbar {
+    height: 0.55rem;
+}
+
+.data-table-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 999rem;
+    background-color: rgba(95, 110, 232, 0.42);
+}
+
+.data-table {
+    width: 100%;
+    min-width: 52rem;
+
+    border-collapse: collapse;
+
+    color: var(--main-text);
+
+    font-size: 0.9rem;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.85rem 0.9rem;
+
+    border-bottom:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.1);
+
+    text-align: left;
+    vertical-align: middle;
+}
+
+.data-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    color: var(--accent-dark);
+    background-color: rgba(237, 239, 255, 0.97);
+
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.06rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.data-table tbody tr {
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.data-table tbody tr:hover,
+.data-table tbody tr:focus {
+    outline: none;
+    background-color: rgba(95, 110, 232, 0.09);
+
+    box-shadow:
+        inset 0.22rem 0 0
+        var(--accent);
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.data-table code {
+    font-size: 0.88rem;
+    overflow-wrap: anywhere;
+}
+
+.symbol-token {
+    display: inline-flex;
+    align-items: center;
+
+    max-width: 14rem;
+
+    padding: 0.3rem 0.55rem;
+
+    border-radius: 0.65rem;
+
+    color: var(--accent-dark);
+    background-color: var(--accent-light);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.table-placeholder {
+    padding: 1.6rem !important;
+
+    color: var(--secondary-text);
+    text-align: center !important;
+}
+
+
+/* ---------- Huffman tree ---------- */
+
+.visualization-heading-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.visualization-heading-row > div:first-child {
+    min-width: 0;
+}
+
+.huffman-toolbar {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.huffman-toolbar button {
+    min-width: 2.55rem;
+    min-height: 2.45rem;
+
+    padding: 0.55rem 0.7rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.18);
+
+    border-radius: 999rem;
+
+    color: var(--accent-dark);
+    background-color: rgba(255, 255, 255, 0.82);
+
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0.4rem 0.9rem
+        rgba(64, 74, 130, 0.08);
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.huffman-toolbar button:hover {
+    transform: translateY(-0.1rem);
+    background-color: rgba(241, 242, 255, 0.96);
+
+    box-shadow:
+        0 0.55rem 1.05rem
+        rgba(64, 74, 130, 0.13);
+}
+
+.huffman-toolbar button:focus-visible {
+    outline: 0.18rem solid rgba(95, 110, 232, 0.4);
+    outline-offset: 0.16rem;
+}
+
+.huffman-tree-shell {
+    width: 100%;
+    max-width: 100%;
+
+    margin-top: 1rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 1.15rem;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            rgba(95, 110, 232, 0.09),
+            transparent 45%
+        ),
+        rgba(255, 255, 255, 0.58);
+
+    overflow: hidden;
+}
+
+.huffman-tree-scroll {
+    width: 100%;
+    max-width: 100%;
+
+    overflow: auto;
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 232, 0.45) transparent;
+}
+
+.huffman-tree-scroll::-webkit-scrollbar {
+    width: 0.65rem;
+    height: 0.65rem;
+}
+
+.huffman-tree-scroll::-webkit-scrollbar-thumb {
+    border-radius: 999rem;
+    background-color: rgba(95, 110, 232, 0.45);
+}
+
+.huffman-tree-svg {
+    display: block;
+
+    min-width: 100%;
+    min-height: 20rem;
+
+    transition:
+        width 0.2s ease,
+        height 0.2s ease;
+}
+
+.huffman-edge {
+    fill: none;
+    stroke: rgba(76, 86, 166, 0.5);
+    stroke-width: 2.2;
+
+    transition:
+        stroke 0.18s ease,
+        stroke-width 0.18s ease,
+        opacity 0.18s ease;
+}
+
+.huffman-branch-label {
+    fill: var(--accent-dark);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 14px;
+    font-weight: 800;
+
+    paint-order: stroke;
+    stroke: rgba(255, 255, 255, 0.92);
+    stroke-width: 5px;
+    stroke-linejoin: round;
+
+    transition:
+        opacity 0.18s ease,
+        font-size 0.18s ease;
+}
+
+.huffman-node-group {
+    cursor: default;
+
+    transition:
+        opacity 0.18s ease,
+        filter 0.18s ease;
+}
+
+.huffman-leaf-node {
+    cursor: pointer;
+}
+
+.huffman-node-circle {
+    fill: rgba(255, 255, 255, 0.96);
+    stroke: rgba(95, 110, 232, 0.38);
+    stroke-width: 2.2;
+
+    filter:
+        drop-shadow(
+            0 6px 9px
+            rgba(64, 74, 130, 0.13)
+        );
+
+    transition:
+        fill 0.18s ease,
+        stroke 0.18s ease,
+        stroke-width 0.18s ease,
+        r 0.18s ease;
+}
+
+.huffman-internal-node .huffman-node-circle {
+    fill: rgba(235, 237, 255, 0.98);
+}
+
+.huffman-node-symbol,
+.huffman-node-value {
+    text-anchor: middle;
+    pointer-events: none;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+.huffman-node-symbol {
+    fill: var(--main-text);
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.huffman-node-value {
+    fill: var(--secondary-text);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.huffman-edge-group.is-highlighted .huffman-edge {
+    stroke: #7a4be2;
+    stroke-width: 4.2;
+}
+
+.huffman-edge-group.is-highlighted .huffman-branch-label {
+    fill: #6a38d2;
+    font-size: 17px;
+}
+
+.huffman-node-group.is-highlighted .huffman-node-circle {
+    fill: rgba(238, 228, 255, 0.99);
+    stroke: #7a4be2;
+    stroke-width: 4;
+}
+
+.huffman-node-group.is-highlighted {
+    filter:
+        drop-shadow(
+            0 0 9px
+            rgba(122, 75, 226, 0.34)
+        );
+}
+
+.huffman-edge-group.is-muted,
+.huffman-node-group.is-muted {
+    opacity: 0.2;
+}
+
+.huffman-leaf-node:focus {
+    outline: none;
+}
+
+.huffman-leaf-node:focus .huffman-node-circle {
+    stroke: var(--accent-dark);
+    stroke-width: 4;
+}
+
+.huffman-empty-message {
+    fill: var(--secondary-text);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* ---------- Text analyzer controls ---------- */
+
+.text-counter {
+    margin-top: -0.45rem;
+
+    color: var(--secondary-text);
+
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: right;
+}
+
+.toggle-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.65rem;
+}
+
+.toggle-option {
+    min-width: 0;
+
+    padding: 0.75rem;
+
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 0.9rem;
+
+    color: var(--main-text);
+    background-color: rgba(255, 255, 255, 0.64);
+
+    font-size: 0.84rem;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.toggle-option input {
+    width: 1.05rem;
+    min-width: 1.05rem;
+    height: 1.05rem;
+
+    accent-color: var(--accent);
+}
+
+.encoded-preview {
+    max-height: 18rem;
+
+    margin-top: 1rem;
+    padding: 1rem;
+
+    overflow: auto;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.16);
+
+    border-radius: 1rem;
+
+    color: var(--accent-dark);
+    background-color: rgba(95, 110, 232, 0.08);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.55;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* ---------- Text approximations ---------- */
+
+.approximation-card {
+    padding: clamp(1.35rem, 3vw, 2rem);
+}
+
+.approximation-controls {
+    display: grid;
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(10rem, 0.32fr)
+        minmax(12rem, 0.45fr);
+
+    gap: 1rem;
+    align-items: end;
+}
+
+.approximation-controls .calculator-button {
+    align-self: end;
+}
+
+.approximation-length {
+    min-width: 0;
+}
+
+.approximation-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+
+    margin-top: 1.2rem;
+}
+
+.generated-text-card {
+    min-width: 0;
+
+    padding: 1rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.62);
+}
+
+.generated-label {
+    display: block;
+
+    margin-bottom: 0.65rem;
+
+    color: var(--accent-dark);
+
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.generated-text {
+    max-height: 18rem;
+    min-height: 9rem;
+
+    padding: 0.8rem;
+
+    overflow: auto;
+
+    border-radius: 0.75rem;
+
+    color: var(--main-text);
+    background-color: rgba(244, 245, 255, 0.76);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+
+    font-size: 0.9rem;
+    line-height: 1.55;
+
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* ---------- Project 3 responsive rules ---------- */
+
+@media (max-width: 68rem) {
+
+    .entropy-example-grid,
+    .approximation-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .approximation-controls {
+        grid-template-columns: 1fr;
+        align-items: stretch;
+    }
+
+    .approximation-controls .calculator-button {
+        align-self: stretch;
+    }
+}
+
+@media (max-width: 52rem) {
+
+    .three-button-row,
+    .toggle-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .visualization-heading-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .huffman-toolbar {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 36rem) {
+
+    .probability-header {
+        display: none;
+    }
+
+    .probability-row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            2.65rem;
+    }
+
+    .probability-symbol-group,
+    .probability-value-group {
+        grid-column: 1;
+    }
+
+    .probability-symbol-group {
+        grid-row: 1;
+    }
+
+    .probability-value-group {
+        grid-row: 2;
+    }
+
+    .remove-row-button {
+        grid-column: 2;
+        grid-row: 1 / 3;
+        align-self: center;
+    }
+
+    .metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .metric-card {
+        min-height: 7.5rem;
+        padding: 0.8rem;
+    }
+
+    .metric-card strong {
+        font-size: clamp(1.1rem, 7vw, 1.5rem);
+    }
+
+    .huffman-toolbar {
+        width: 100%;
+    }
+
+    .huffman-toolbar button {
+        flex: 1 1 auto;
+    }
+}
+
+@media (max-width: 24rem) {
+
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+}
