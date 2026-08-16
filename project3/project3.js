@@ -604,37 +604,326 @@ function clearHuffmanPath(svgId) {
     });
 }
 
-function changeTreeZoom(svgId, action) {
+function setTreeZoom(
+    svgId,
+    requestedZoom,
+    pointerPosition = null
+) {
     const svg = getElement(svgId);
-    const baseWidth = Number(svg.dataset.baseWidth);
-    const baseHeight = Number(svg.dataset.baseHeight);
 
-    if (!Number.isFinite(baseWidth) || !Number.isFinite(baseHeight)) {
+    const scrollContainer =
+        svg.closest(".huffman-tree-scroll");
+
+    const baseWidth =
+        Number(svg.dataset.baseWidth);
+
+    const baseHeight =
+        Number(svg.dataset.baseHeight);
+
+    if (
+        !Number.isFinite(baseWidth)
+        ||
+        !Number.isFinite(baseHeight)
+    ) {
         return;
     }
 
-    const currentZoom = Number(svg.dataset.zoom) || 1;
-    let nextZoom = currentZoom;
+    const currentZoom =
+        Number(svg.dataset.zoom) || 1;
 
-    if (action === "in") {
-        nextZoom = clamp(currentZoom + 0.15, 0.55, 2.25);
-    } else if (action === "out") {
-        nextZoom = clamp(currentZoom - 0.15, 0.55, 2.25);
-    } else {
-        nextZoom = 1;
+    const nextZoom = clamp(
+        requestedZoom,
+        0.55,
+        2.25
+    );
+
+    let viewportX = 0;
+    let viewportY = 0;
+    let treeX = 0;
+    let treeY = 0;
+
+    if (scrollContainer) {
+        const rectangle =
+            scrollContainer.getBoundingClientRect();
+
+        viewportX = pointerPosition
+            ? clamp(
+                pointerPosition.clientX - rectangle.left,
+                0,
+                scrollContainer.clientWidth
+            )
+            : scrollContainer.clientWidth / 2;
+
+        viewportY = pointerPosition
+            ? clamp(
+                pointerPosition.clientY - rectangle.top,
+                0,
+                scrollContainer.clientHeight
+            )
+            : scrollContainer.clientHeight / 2;
+
+        /*
+         * Coordinates of the point under the cursor
+         * in the unscaled tree.
+         */
+        treeX =
+            (
+                scrollContainer.scrollLeft
+                +
+                viewportX
+            )
+            /
+            currentZoom;
+
+        treeY =
+            (
+                scrollContainer.scrollTop
+                +
+                viewportY
+            )
+            /
+            currentZoom;
     }
 
-    svg.dataset.zoom = String(nextZoom);
-    svg.style.width = `${baseWidth * nextZoom}px`;
-    svg.style.height = `${baseHeight * nextZoom}px`;
+    svg.dataset.zoom =
+        String(nextZoom);
+
+    svg.style.width =
+        `${baseWidth * nextZoom}px`;
+
+    svg.style.height =
+        `${baseHeight * nextZoom}px`;
+
+    if (scrollContainer) {
+        /*
+         * Keep the same part of the tree under
+         * the cursor after zooming.
+         */
+        scrollContainer.scrollLeft =
+            treeX * nextZoom - viewportX;
+
+        scrollContainer.scrollTop =
+            treeY * nextZoom - viewportY;
+    }
+}
+
+function changeTreeZoom(svgId, action) {
+    const svg = getElement(svgId);
+
+    const currentZoom =
+        Number(svg.dataset.zoom) || 1;
+
+    let nextZoom = 1;
+
+    if (action === "in") {
+        nextZoom =
+            currentZoom * 1.15;
+    } else if (action === "out") {
+        nextZoom =
+            currentZoom / 1.15;
+    }
+
+    setTreeZoom(
+        svgId,
+        nextZoom
+    );
 }
 
 function wireTreeZoomControls() {
-    document.querySelectorAll("[data-tree][data-zoom]").forEach((button) => {
-        button.addEventListener("click", () => {
-            changeTreeZoom(button.dataset.tree, button.dataset.zoom);
+    document
+        .querySelectorAll(
+            "[data-tree][data-zoom]"
+        )
+        .forEach((button) => {
+            button.addEventListener(
+                "click",
+                () => {
+                    changeTreeZoom(
+                        button.dataset.tree,
+                        button.dataset.zoom
+                    );
+                }
+            );
         });
-    });
+}
+
+function wireTreeInteractions() {
+    document
+        .querySelectorAll(
+            ".huffman-tree-scroll"
+        )
+        .forEach((scrollContainer) => {
+            const svg =
+                scrollContainer.querySelector(
+                    ".huffman-tree-svg"
+                );
+
+            if (!svg) {
+                return;
+            }
+
+            /*
+             * Ctrl + wheel:
+             * zoom around the cursor position.
+             */
+            scrollContainer.addEventListener(
+                "wheel",
+                (event) => {
+                    if (!event.ctrlKey) {
+                        return;
+                    }
+
+                    event.preventDefault();
+
+                    const currentZoom =
+                        Number(svg.dataset.zoom) || 1;
+
+                    /*
+                     * Normalize wheel values from mice
+                     * and touchpads.
+                     */
+                    const normalizedDelta =
+                        event.deltaMode === 1
+                            ? event.deltaY * 16
+                            : event.deltaY;
+
+                    const zoomMultiplier =
+                        Math.exp(
+                            -normalizedDelta * 0.0015
+                        );
+
+                    setTreeZoom(
+                        svg.id,
+                        currentZoom
+                            *
+                            zoomMultiplier,
+                        {
+                            clientX: event.clientX,
+                            clientY: event.clientY
+                        }
+                    );
+                },
+                {
+                    passive: false
+                }
+            );
+
+            /*
+             * Mouse drag:
+             * grab and move the tree viewport.
+             */
+            let isDragging = false;
+
+            let startPointerX = 0;
+            let startPointerY = 0;
+
+            let startScrollLeft = 0;
+            let startScrollTop = 0;
+
+            scrollContainer.addEventListener(
+                "pointerdown",
+                (event) => {
+                    /*
+                     * Only the main mouse button.
+                     * Touch scrolling remains native.
+                     */
+                    if (
+                        event.button !== 0
+                        ||
+                        event.pointerType !== "mouse"
+                        ||
+                        event.ctrlKey
+                    ) {
+                        return;
+                    }
+
+                    isDragging = true;
+
+                    startPointerX =
+                        event.clientX;
+
+                    startPointerY =
+                        event.clientY;
+
+                    startScrollLeft =
+                        scrollContainer.scrollLeft;
+
+                    startScrollTop =
+                        scrollContainer.scrollTop;
+
+                    scrollContainer.classList.add(
+                        "is-dragging"
+                    );
+
+                    scrollContainer.setPointerCapture(
+                        event.pointerId
+                    );
+
+                    event.preventDefault();
+                }
+            );
+
+            scrollContainer.addEventListener(
+                "pointermove",
+                (event) => {
+                    if (!isDragging) {
+                        return;
+                    }
+
+                    const movementX =
+                        event.clientX
+                        -
+                        startPointerX;
+
+                    const movementY =
+                        event.clientY
+                        -
+                        startPointerY;
+
+                    scrollContainer.scrollLeft =
+                        startScrollLeft
+                        -
+                        movementX;
+
+                    scrollContainer.scrollTop =
+                        startScrollTop
+                        -
+                        movementY;
+                }
+            );
+
+            const finishDragging = (event) => {
+                if (!isDragging) {
+                    return;
+                }
+
+                isDragging = false;
+
+                scrollContainer.classList.remove(
+                    "is-dragging"
+                );
+
+                if (
+                    scrollContainer.hasPointerCapture(
+                        event.pointerId
+                    )
+                ) {
+                    scrollContainer.releasePointerCapture(
+                        event.pointerId
+                    );
+                }
+            };
+
+            scrollContainer.addEventListener(
+                "pointerup",
+                finishDragging
+            );
+
+            scrollContainer.addEventListener(
+                "pointercancel",
+                finishDragging
+            );
+        });
 }
 
 function wireTableTreeHighlights(tableBodyId, svgId) {
@@ -1126,7 +1415,9 @@ function attachEvents() {
         generateApproximations
     );
 
+    wireAdaptiveProbabilityStep();
     wireTreeZoomControls();
+    wireTreeInteractions();
 }
 
 function initializePage() {
