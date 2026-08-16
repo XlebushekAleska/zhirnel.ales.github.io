@@ -1415,7 +1415,6 @@ function attachEvents() {
         generateApproximations
     );
 
-    wireAdaptiveProbabilityStep();
     wireTreeZoomControls();
     wireTreeInteractions();
 }
