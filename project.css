@@ -2463,3 +2463,926 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+
+/* ==========================================================
+   Project 4 additions: Game Theory and Nash Equilibrium
+   Add this entire block to the end of project.css
+   ========================================================== */
+
+/* ---------- Game size controls ---------- */
+
+.game-controls-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.dimension-control {
+    min-width: 0;
+
+    padding: 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.62);
+}
+
+.dimension-label {
+    color: var(--main-text);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.dimension-stepper {
+    flex: 0 0 auto;
+
+    display: grid;
+    grid-template-columns: 2.65rem 3.4rem 2.65rem;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.dimension-button {
+    width: 2.65rem;
+    height: 2.65rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.2);
+
+    border-radius: 50%;
+
+    color: var(--accent-dark);
+    background-color: rgba(255, 255, 255, 0.86);
+
+    font: inherit;
+    font-size: 1.25rem;
+    font-weight: 900;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0.4rem 0.9rem
+        rgba(64, 74, 130, 0.08);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.dimension-button:hover:not(:disabled) {
+    transform: translateY(-0.12rem);
+
+    box-shadow:
+        0 0.55rem 1rem
+        rgba(95, 110, 232, 0.17);
+}
+
+.dimension-button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.dimension-button:focus-visible {
+    outline: 0.18rem solid rgba(95, 110, 232, 0.4);
+    outline-offset: 0.16rem;
+}
+
+.dimension-value {
+    min-width: 3.4rem;
+
+    color: var(--accent-dark);
+
+    font-size: 1.35rem;
+    text-align: center;
+}
+
+/* ---------- Presets ---------- */
+
+.preset-area {
+    margin-top: 1rem;
+}
+
+.preset-label {
+    display: block;
+
+    margin-bottom: 0.6rem;
+
+    color: var(--secondary-text);
+
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+
+.preset-grid .calculator-button {
+    min-width: 0;
+    padding-inline: 0.8rem;
+}
+
+/* ---------- Payoff matrix ---------- */
+
+.game-matrix-shell {
+    width: 100%;
+    max-width: 100%;
+
+    margin-top: 1.25rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.15);
+
+    border-radius: 1.15rem;
+
+    background-color: rgba(255, 255, 255, 0.58);
+
+    overflow: hidden;
+}
+
+.game-matrix-scroll {
+    width: 100%;
+    max-width: 100%;
+    max-height: min(72vh, 46rem);
+
+    overflow: auto;
+
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 232, 0.45) transparent;
+}
+
+.game-matrix-scroll::-webkit-scrollbar {
+    width: 0.65rem;
+    height: 0.65rem;
+}
+
+.game-matrix-scroll::-webkit-scrollbar-thumb {
+    border-radius: 999rem;
+    background-color: rgba(95, 110, 232, 0.45);
+}
+
+.payoff-matrix {
+    width: max-content;
+    min-width: 100%;
+
+    border-collapse: separate;
+    border-spacing: 0;
+
+    color: var(--main-text);
+}
+
+.payoff-matrix th,
+.payoff-matrix td {
+    border-right:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.1);
+
+    border-bottom:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.1);
+}
+
+.payoff-matrix thead th {
+    position: sticky;
+    top: 0;
+    z-index: 4;
+
+    min-width: 10.5rem;
+
+    padding: 0.65rem;
+
+    background-color: rgba(237, 239, 255, 0.98);
+}
+
+.matrix-axis-corner {
+    left: 0;
+    z-index: 7 !important;
+
+    min-width: 9.5rem !important;
+
+    color: var(--accent-dark);
+
+    font-size: 0.72rem;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.matrix-axis-corner span {
+    display: block;
+}
+
+.row-strategy-header {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+
+    min-width: 9.5rem;
+
+    padding: 0.65rem;
+
+    background-color: rgba(244, 245, 255, 0.98);
+}
+
+.matrix-strategy-input {
+    width: 100%;
+    min-width: 0;
+
+    padding: 0.65rem 0.7rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.15);
+
+    border-radius: 0.75rem;
+
+    color: var(--main-text);
+    background-color: rgba(255, 255, 255, 0.88);
+
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 800;
+
+    outline: none;
+}
+
+.matrix-strategy-input:focus {
+    border-color: rgba(95, 110, 232, 0.55);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(95, 110, 232, 0.1);
+}
+
+.payoff-cell {
+    min-width: 11rem;
+    min-height: 7.3rem;
+
+    position: relative;
+
+    padding: 0.8rem;
+
+    vertical-align: middle;
+
+    background-color: rgba(255, 255, 255, 0.66);
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.payoff-cell:hover {
+    background-color: rgba(248, 248, 255, 0.94);
+}
+
+.payoff-cell:focus-visible,
+.payoff-cell.is-selected {
+    outline: none;
+
+    box-shadow:
+        inset 0 0 0 0.16rem
+        rgba(95, 110, 232, 0.64);
+}
+
+.payoff-pair {
+    display: grid;
+    grid-template-columns: auto minmax(3.4rem, 1fr) auto minmax(3.4rem, 1fr) auto;
+    align-items: center;
+    justify-content: center;
+    gap: 0.28rem;
+
+    color: var(--secondary-text);
+
+    font-weight: 900;
+}
+
+.payoff-input {
+    width: 100%;
+    min-width: 0;
+
+    padding: 0.55rem 0.45rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 0.65rem;
+
+    color: var(--main-text);
+    background-color: rgba(255, 255, 255, 0.9);
+
+    font: inherit;
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-weight: 800;
+    text-align: center;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.player-one-payoff:focus {
+    border-color: rgba(70, 140, 225, 0.55);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(70, 140, 225, 0.1);
+}
+
+.player-two-payoff:focus {
+    border-color: rgba(164, 95, 218, 0.55);
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(164, 95, 218, 0.1);
+}
+
+.payoff-separator {
+    color: var(--secondary-text);
+}
+
+/* ---------- Matrix analysis states ---------- */
+
+.payoff-cell.is-best-p1 {
+    box-shadow:
+        inset 0.28rem 0 0
+        rgba(70, 140, 225, 0.75);
+}
+
+.payoff-cell.is-best-p2 {
+    box-shadow:
+        inset 0 -0.28rem 0
+        rgba(164, 95, 218, 0.72);
+}
+
+.payoff-cell.is-best-p1.is-best-p2 {
+    box-shadow:
+        inset 0.28rem 0 0 rgba(70, 140, 225, 0.75),
+        inset 0 -0.28rem 0 rgba(164, 95, 218, 0.72);
+}
+
+.payoff-cell.is-pareto {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(230, 255, 241, 0.78),
+            rgba(255, 255, 255, 0.75)
+        );
+}
+
+.payoff-cell.is-nash {
+    outline:
+        0.18rem
+        solid
+        rgba(235, 153, 52, 0.86);
+
+    outline-offset: -0.22rem;
+}
+
+.payoff-cell.is-selected {
+    box-shadow:
+        inset 0 0 0 0.16rem rgba(95, 110, 232, 0.64),
+        0 0 1.2rem rgba(95, 110, 232, 0.18);
+}
+
+.analysis-badges {
+    min-height: 1.55rem;
+
+    margin-top: 0.6rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+.analysis-badge {
+    padding: 0.22rem 0.42rem;
+
+    border-radius: 999rem;
+
+    font-size: 0.64rem;
+    font-weight: 900;
+    letter-spacing: 0.02rem;
+    white-space: nowrap;
+}
+
+.best-p1-badge {
+    color: #245d9a;
+    background-color: rgba(210, 235, 255, 0.9);
+}
+
+.best-p2-badge {
+    color: #754099;
+    background-color: rgba(239, 220, 255, 0.9);
+}
+
+.nash-badge {
+    color: #8b570d;
+    background-color: rgba(255, 235, 197, 0.94);
+}
+
+.pareto-badge {
+    color: #2f7a52;
+    background-color: rgba(220, 250, 233, 0.94);
+}
+
+.matrix-help {
+    margin-top: 0.9rem !important;
+    margin-bottom: 0 !important;
+}
+
+.matrix-legend {
+    margin-top: 1rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem 1rem;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+
+    color: var(--secondary-text);
+
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.legend-swatch {
+    width: 0.9rem;
+    height: 0.9rem;
+
+    display: inline-block;
+
+    border-radius: 0.25rem;
+}
+
+.best-p1-swatch {
+    background-color: rgba(70, 140, 225, 0.78);
+}
+
+.best-p2-swatch {
+    background-color: rgba(164, 95, 218, 0.76);
+}
+
+.nash-swatch {
+    border: 0.16rem solid rgba(235, 153, 52, 0.9);
+    background-color: rgba(255, 242, 220, 0.8);
+}
+
+.pareto-swatch {
+    background-color: rgba(117, 210, 155, 0.72);
+}
+
+.analyze-game-button {
+    margin-top: 1rem;
+}
+
+/* ---------- Analysis text ---------- */
+
+.game-analysis-result {
+    margin-top: 1rem;
+}
+
+.analysis-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.analysis-summary-grid > div {
+    min-width: 0;
+
+    padding: 0.85rem;
+
+    border-radius: 0.85rem;
+
+    background-color: rgba(245, 246, 255, 0.78);
+}
+
+.analysis-summary-grid ul,
+.deviation-list {
+    margin: 0.55rem 0 0;
+    padding-left: 1.25rem;
+}
+
+.analysis-summary-grid li,
+.deviation-list li {
+    margin-bottom: 0.35rem;
+}
+
+.analysis-dominance-summary {
+    margin-top: 1rem;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+}
+
+.analysis-dominance-summary span {
+    padding: 0.7rem 0.8rem;
+
+    border-radius: 0.8rem;
+
+    background-color: rgba(95, 110, 232, 0.08);
+}
+
+/* ---------- Selected outcome ---------- */
+
+.outcome-detail {
+    margin-top: 1rem;
+
+    padding: 1rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 1rem;
+
+    color: var(--main-text);
+    background-color: rgba(255, 255, 255, 0.62);
+
+    line-height: 1.55;
+}
+
+.outcome-detail-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.outcome-label {
+    display: block;
+
+    margin-bottom: 0.25rem;
+
+    color: var(--secondary-text);
+
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.outcome-detail-heading h4 {
+    margin: 0;
+
+    color: var(--main-text);
+    font-size: 1.1rem;
+}
+
+.outcome-payoff {
+    flex: 0 0 auto;
+
+    padding: 0.55rem 0.75rem;
+
+    border-radius: 0.75rem;
+
+    color: var(--accent-dark);
+    background-color: var(--accent-light);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 1.05rem;
+}
+
+.outcome-status-row {
+    margin-top: 0.8rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.outcome-status-row span {
+    padding: 0.35rem 0.6rem;
+
+    border-radius: 999rem;
+
+    color: var(--accent-dark);
+    background-color: rgba(95, 110, 232, 0.1);
+
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+
+.outcome-detail-grid {
+    margin-top: 1rem;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
+.deviation-card {
+    min-width: 0;
+
+    padding: 0.9rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.12);
+
+    border-radius: 0.9rem;
+
+    background-color: rgba(247, 247, 255, 0.78);
+}
+
+.deviation-card h4 {
+    margin: 0 0 0.5rem;
+
+    font-size: 0.98rem;
+}
+
+.deviation-card p {
+    margin: 0;
+
+    color: var(--secondary-text);
+
+    font-size: 0.88rem;
+}
+
+.deviation-success {
+    margin-top: 0.7rem !important;
+
+    color: #2f7a52 !important;
+    font-weight: 800;
+}
+
+/* ---------- Behaviour simulation ---------- */
+
+.simulation-controls {
+    gap: 1.1rem;
+}
+
+.probability-control {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.probability-control > label {
+    color: var(--main-text);
+
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.probability-input-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 7rem;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.probability-input-row input[type="range"] {
+    width: 100%;
+
+    accent-color: var(--accent);
+}
+
+.percentage-input-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.35rem;
+
+    padding-right: 0.7rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.18);
+
+    border-radius: 0.8rem;
+
+    background-color: rgba(255, 255, 255, 0.82);
+}
+
+.percentage-input-wrap input {
+    width: 100%;
+    min-width: 0;
+
+    padding: 0.72rem 0.2rem 0.72rem 0.75rem;
+
+    border: none;
+    outline: none;
+
+    color: var(--main-text);
+    background: transparent;
+
+    font: inherit;
+    font-weight: 800;
+}
+
+.percentage-input-wrap span {
+    color: var(--secondary-text);
+    font-weight: 800;
+}
+
+.simulation-results {
+    margin-top: clamp(1.2rem, 3vw, 2rem);
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.simulation-results[hidden] {
+    display: none;
+}
+
+.simulation-result-card {
+    min-width: 0;
+
+    padding: 1.1rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(255, 255, 255, 0.82);
+
+    border-radius: 1.15rem;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.88),
+            rgba(238, 240, 255, 0.73)
+        );
+
+    box-shadow: var(--small-shadow);
+}
+
+.simulation-result-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem;
+}
+
+.simulation-result-heading span {
+    color: var(--secondary-text);
+
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.05rem;
+    text-transform: uppercase;
+}
+
+.simulation-result-heading strong {
+    color: var(--accent-dark);
+    font-size: 1.3rem;
+}
+
+.simulation-bar {
+    height: 0.85rem;
+
+    margin: 0.85rem 0 0.6rem;
+
+    overflow: hidden;
+
+    border-radius: 999rem;
+
+    background-color: rgba(95, 110, 232, 0.1);
+}
+
+.simulation-bar-fill {
+    width: 0;
+    height: 100%;
+
+    border-radius: inherit;
+
+    transition: width 0.45s ease;
+}
+
+.regular-bar-fill {
+    background:
+        linear-gradient(
+            90deg,
+            #5f6ee8,
+            #67b9f2
+        );
+}
+
+.crime-bar-fill {
+    background:
+        linear-gradient(
+            90deg,
+            #8a67d8,
+            #c27ad8
+        );
+}
+
+.simulation-result-card small {
+    color: var(--secondary-text);
+    font-weight: 700;
+}
+
+/* ---------- Project 4 responsive rules ---------- */
+
+@media (max-width: 68rem) {
+    .preset-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 52rem) {
+    .game-controls-grid,
+    .analysis-summary-grid,
+    .analysis-dominance-summary,
+    .outcome-detail-grid,
+    .simulation-results {
+        grid-template-columns: 1fr;
+    }
+
+    .dimension-control {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .dimension-stepper {
+        width: min(100%, 11rem);
+    }
+
+    .outcome-detail-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 36rem) {
+    .preset-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .probability-input-row {
+        grid-template-columns: 1fr;
+    }
+
+    .percentage-input-wrap {
+        width: min(100%, 8rem);
+    }
+
+    .matrix-legend {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .payoff-matrix thead th,
+    .payoff-cell {
+        min-width: 10rem;
+    }
+
+    .matrix-axis-corner,
+    .row-strategy-header {
+        min-width: 8.5rem !important;
+    }
+}
