@@ -2049,7 +2049,9 @@ footer {
 
 .huffman-branch-label {
     fill: var(--accent-dark);
-
+    
+    text-anchor: middle;
+    
     font-family:
         Arial,
         Helvetica,
