@@ -2007,12 +2007,30 @@ footer {
 .huffman-tree-scroll {
     width: 100%;
     max-width: 100%;
+    max-height: min(70vh, 42rem);
 
     overflow: auto;
-    overscroll-behavior: contain;
+
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+
+    cursor: grab;
+    scrollbar-gutter: stable;
 
     scrollbar-width: thin;
-    scrollbar-color: rgba(95, 110, 232, 0.45) transparent;
+    scrollbar-color:
+        rgba(95, 110, 232, 0.45)
+        transparent;
+}
+
+.huffman-tree-scroll.is-dragging {
+    cursor: grabbing;
+
+    user-select: none;
+}
+
+.huffman-tree-scroll.is-dragging * {
+    cursor: grabbing !important;
 }
 
 .huffman-tree-scroll::-webkit-scrollbar {
@@ -2034,6 +2052,8 @@ footer {
     transition:
         width 0.2s ease,
         height 0.2s ease;
+
+    user-select: none;
 }
 
 .huffman-edge {
