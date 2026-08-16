@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Project 4 | Game Theory and Nash Equilibrium</title>
+
+    <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+    <link rel="stylesheet" href="../project.css">
+    <script src="project4.js" defer></script>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header class="top-panel">
+            <a href="../index.html" class="logo" aria-label="Go to main page">
+                IT
+            </a>
+
+            <nav class="project-navigation" aria-label="Project navigation">
+                <a href="#overview">Overview</a>
+                <a href="#concepts">Concepts</a>
+                <a href="#analyzer">Game Analyzer</a>
+                <a href="#simulation">Simulation</a>
+                <a href="#sources">Sources</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="project-hero" id="top">
+                <p class="course-label">Information Theory</p>
+
+                <h1>Project 4</h1>
+                <h2>Game Theory and Nash Equilibrium</h2>
+
+                <p class="hero-description">
+                    A dynamic normal-form game analyzer with editable payoff matrices,
+                    best responses, pure-strategy Nash equilibria, Pareto analysis,
+                    dominant strategies and a simple behaviour simulation.
+                </p>
+
+                <div class="hero-meta">
+                    <div class="meta-card">
+                        <span class="meta-label">Student</span>
+                        <strong>Ales Zhirnel</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Instructor</span>
+                        <strong>Andrzej Jaroszewicz</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Matrix size</span>
+                        <strong>2×2 to 10×10</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="overview">
+                <div class="section-heading">
+                    <p class="section-label">Part 01</p>
+                    <h2>Game Theory Overview</h2>
+                    <p class="section-description">
+                        In a strategic game, each player's result depends on the
+                        strategies chosen by all participants.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="theory-card">
+                        <h3>Normal-form game</h3>
+
+                        <p>
+                            For two players, a normal-form game can be represented as
+                            a matrix. Player 1 chooses a row, Player 2 chooses a column,
+                            and every cell contains a pair of payoffs.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>(u₁, u₂) = (Player 1 payoff, Player 2 payoff)</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Interpretation</span>
+                            <h4>Higher payoff = more preferred outcome</h4>
+                            <p>
+                                A payoff does not have to represent money. It can
+                                represent utility, points, profit, years with a minus
+                                sign, or any other numerical preference scale.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>Nash equilibrium</h3>
+
+                        <p>
+                            A strategy profile is a Nash equilibrium when neither
+                            player can improve their own payoff by changing only their
+                            strategy while the other player's strategy stays fixed.
+                        </p>
+
+                        <div class="formula-line">
+                            <code>Each player's strategy is a best response to the other.</code>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Course example</span>
+                            <h4>Prisoner's Dilemma</h4>
+                            <p>
+                                The preset from the course material uses Confess and
+                                Silent as the two strategies. Its Nash equilibrium is
+                                worse for both players than mutual silence, illustrating
+                                the difference between individual stability and a
+                                collectively preferable outcome.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="content-section" id="concepts">
+                <div class="section-heading">
+                    <p class="section-label">Part 02</p>
+                    <h2>Best Responses and Pareto Optimality</h2>
+                    <p class="section-description">
+                        The analyzer marks the local incentives that create Nash
+                        equilibria and separately checks whether outcomes are
+                        Pareto-optimal.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="theory-card">
+                        <h3>Best response</h3>
+
+                        <p>
+                            For every fixed strategy of Player 2, Player 1 compares all
+                            rows and chooses the highest Player 1 payoff. Player 2 does
+                            the same across columns for every fixed row.
+                        </p>
+
+                        <div class="example-box">
+                            <span class="example-label">Nash test</span>
+                            <h4>Two best responses meet</h4>
+                            <p>
+                                If one cell is a best response for both players at the
+                                same time, that cell is a pure-strategy Nash equilibrium.
+                                Ties are allowed, so one game can have several pure Nash
+                                equilibria.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>Pareto optimality</h3>
+
+                        <p>
+                            An outcome is Pareto-dominated if another outcome makes
+                            neither player worse off and makes at least one player
+                            strictly better off. An outcome is Pareto-optimal when no
+                            such improvement exists.
+                        </p>
+
+                        <div class="example-box limitation-box">
+                            <span class="example-label">Important limitation</span>
+                            <h4>Pure strategies only</h4>
+                            <p>
+                                This calculator searches for Nash equilibria in pure
+                                strategies. Some finite games have no pure equilibrium
+                                and require mixed strategies, where players randomize
+                                between several actions.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="content-section" id="analyzer">
+                <div class="section-heading">
+                    <p class="section-label">Part 03</p>
+                    <h2>Interactive Game Analyzer</h2>
+                    <p class="section-description">
+                        Start with the 2×2 Prisoner's Dilemma or build any two-player
+                        payoff matrix up to 10×10. Rows belong to Player 1 and columns
+                        belong to Player 2.
+                    </p>
+                </div>
+
+                <div class="visualization-card">
+                    <div class="game-controls-grid">
+                        <div class="dimension-control">
+                            <span class="dimension-label">Player 1 strategies</span>
+
+                            <div class="dimension-stepper" aria-label="Player 1 strategy count">
+                                <button
+                                    type="button"
+                                    class="dimension-button"
+                                    id="rows-minus"
+                                    aria-label="Remove one Player 1 strategy"
+                                >−</button>
+
+                                <strong class="dimension-value" id="row-count">2</strong>
+
+                                <button
+                                    type="button"
+                                    class="dimension-button"
+                                    id="rows-plus"
+                                    aria-label="Add one Player 1 strategy"
+                                >+</button>
+                            </div>
+                        </div>
+
+                        <div class="dimension-control">
+                            <span class="dimension-label">Player 2 strategies</span>
+
+                            <div class="dimension-stepper" aria-label="Player 2 strategy count">
+                                <button
+                                    type="button"
+                                    class="dimension-button"
+                                    id="cols-minus"
+                                    aria-label="Remove one Player 2 strategy"
+                                >−</button>
+
+                                <strong class="dimension-value" id="column-count">2</strong>
+
+                                <button
+                                    type="button"
+                                    class="dimension-button"
+                                    id="cols-plus"
+                                    aria-label="Add one Player 2 strategy"
+                                >+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preset-area">
+                        <span class="preset-label">Presets</span>
+
+                        <div class="preset-grid">
+                            <button
+                                type="button"
+                                class="calculator-button secondary-button"
+                                id="preset-prisoners"
+                            >Prisoner's Dilemma</button>
+
+                            <button
+                                type="button"
+                                class="calculator-button secondary-button"
+                                id="preset-coordination"
+                            >Coordination Game</button>
+
+                            <button
+                                type="button"
+                                class="calculator-button secondary-button"
+                                id="preset-rps"
+                            >Rock–Paper–Scissors</button>
+
+                            <button
+                                type="button"
+                                class="calculator-button secondary-button"
+                                id="preset-custom"
+                            >Clear Custom Game</button>
+                        </div>
+                    </div>
+
+                    <div class="game-matrix-shell">
+                        <div class="game-matrix-scroll" id="game-matrix-scroll">
+                            <table
+                                class="payoff-matrix"
+                                id="payoff-matrix"
+                                aria-label="Editable payoff matrix"
+                            ></table>
+                        </div>
+                    </div>
+
+                    <p class="matrix-help">
+                        Edit strategy names in the headers and both payoff values in
+                        every cell. Payoffs are entered as <strong>(Player 1, Player 2)</strong>.
+                    </p>
+
+                    <div class="matrix-legend" aria-label="Analysis legend">
+                        <span class="legend-item">
+                            <span class="legend-swatch best-p1-swatch"></span>
+                            Player 1 best response
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-swatch best-p2-swatch"></span>
+                            Player 2 best response
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-swatch nash-swatch"></span>
+                            Nash equilibrium
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-swatch pareto-swatch"></span>
+                            Pareto-optimal
+                        </span>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="calculator-button analyze-game-button"
+                        id="analyze-game-button"
+                    >Analyze game</button>
+                </div>
+
+                <div class="metric-grid" id="game-metrics">
+                    <div class="metric-card">
+                        <span>Pure Nash equilibria</span>
+                        <strong id="metric-nash">—</strong>
+                        <small>mutual best responses</small>
+                    </div>
+
+                    <div class="metric-card">
+                        <span>Pareto-optimal outcomes</span>
+                        <strong id="metric-pareto">—</strong>
+                        <small>not Pareto-dominated</small>
+                    </div>
+
+                    <div class="metric-card">
+                        <span>Player 1 dominance</span>
+                        <strong id="metric-dominant-p1">—</strong>
+                        <small>strict or weak dominant strategy</small>
+                    </div>
+
+                    <div class="metric-card">
+                        <span>Player 2 dominance</span>
+                        <strong id="metric-dominant-p2">—</strong>
+                        <small>strict or weak dominant strategy</small>
+                    </div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Analysis summary</h3>
+                    <p>
+                        The result below lists the equilibria and explains whether
+                        dominant strategies were found.
+                    </p>
+
+                    <div
+                        class="calculator-result game-analysis-result"
+                        id="game-analysis-result"
+                        aria-live="polite"
+                    >Press “Analyze game” to evaluate the matrix.</div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Selected outcome</h3>
+                    <p>
+                        Click any payoff cell to inspect unilateral deviations from
+                        that outcome.
+                    </p>
+
+                    <div
+                        class="outcome-detail"
+                        id="outcome-detail"
+                        aria-live="polite"
+                    >Select a cell in the payoff matrix.</div>
+                </div>
+            </section>
+
+            <section class="content-section" id="simulation">
+                <div class="section-heading">
+                    <p class="section-label">Part 04</p>
+                    <h2>Behaviour Simulation</h2>
+                    <p class="section-description">
+                        A small Monte Carlo experiment inspired by the Person and
+                        Crime classes in the course manual.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="theory-card">
+                        <h3>Random decisions</h3>
+
+                        <p>
+                            The course manual models a regular person's confession as
+                            an approximately 50% random event and a crime-ring member's
+                            decision to rat out as a much rarer event. Here both
+                            probabilities can be changed explicitly.
+                        </p>
+
+                        <div class="example-box">
+                            <span class="example-label">Monte Carlo idea</span>
+                            <h4>Repeat the same random experiment many times</h4>
+                            <p>
+                                With more trials, the observed percentage usually moves
+                                closer to the probability specified by the model.
+                            </p>
+                        </div>
+                    </article>
+
+                    <article class="calculator-card">
+                        <h3>Simulation controls</h3>
+
+                        <div class="calculator-box simulation-controls">
+                            <div class="probability-control">
+                                <label for="regular-probability">
+                                    Regular person — confession probability
+                                </label>
+
+                                <div class="probability-input-row">
+                                    <input
+                                        type="range"
+                                        id="regular-probability-range"
+                                        min="0"
+                                        max="100"
+                                        step="1"
+                                        value="50"
+                                    >
+
+                                    <div class="percentage-input-wrap">
+                                        <input
+                                            type="number"
+                                            id="regular-probability"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value="50"
+                                        >
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="probability-control">
+                                <label for="crime-probability">
+                                    Crime-ring member — rat-out probability
+                                </label>
+
+                                <div class="probability-input-row">
+                                    <input
+                                        type="range"
+                                        id="crime-probability-range"
+                                        min="0"
+                                        max="100"
+                                        step="1"
+                                        value="10"
+                                    >
+
+                                    <div class="percentage-input-wrap">
+                                        <input
+                                            type="number"
+                                            id="crime-probability"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value="10"
+                                        >
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <label class="input-group" for="simulation-trials">
+                                <span>Number of trials</span>
+                                <input
+                                    type="number"
+                                    id="simulation-trials"
+                                    min="100"
+                                    max="100000"
+                                    step="100"
+                                    value="1000"
+                                >
+                            </label>
+
+                            <button
+                                type="button"
+                                class="calculator-button"
+                                id="run-simulation-button"
+                            >Run simulation</button>
+
+                            <div
+                                class="calculator-result"
+                                id="simulation-result"
+                                aria-live="polite"
+                            >Run the simulation to compare observed frequencies.</div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="simulation-results" id="simulation-bars" hidden>
+                    <article class="simulation-result-card">
+                        <div class="simulation-result-heading">
+                            <span>Regular person</span>
+                            <strong id="regular-observed">—</strong>
+                        </div>
+
+                        <div class="simulation-bar" aria-hidden="true">
+                            <div
+                                class="simulation-bar-fill regular-bar-fill"
+                                id="regular-bar-fill"
+                            ></div>
+                        </div>
+
+                        <small id="regular-count">—</small>
+                    </article>
+
+                    <article class="simulation-result-card">
+                        <div class="simulation-result-heading">
+                            <span>Crime-ring member</span>
+                            <strong id="crime-observed">—</strong>
+                        </div>
+
+                        <div class="simulation-bar" aria-hidden="true">
+                            <div
+                                class="simulation-bar-fill crime-bar-fill"
+                                id="crime-bar-fill"
+                            ></div>
+                        </div>
+
+                        <small id="crime-count">—</small>
+                    </article>
+                </div>
+            </section>
+
+            <section class="back-home-section" aria-label="Back to main page">
+                <a href="../index.html" class="back-home-button">
+                    Back to Main Page
+                </a>
+            </section>
+
+            <section class="content-section" id="sources">
+                <div class="section-heading">
+                    <p class="section-label">Sources</p>
+                    <h2>Materials used</h2>
+                    <p class="section-description">
+                        Course materials used for the project.
+                    </p>
+                </div>
+
+                <div class="source-grid">
+                    <a
+                        href="https://boole.bsite.net/Projects/6/"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">01</span>
+                        <h3>Nash Equilibrium Project Page</h3>
+                        <p>
+                            Original Project 6 page from the course website.
+                        </p>
+                    </a>
+
+                    <a
+                        href="https://boole.bsite.net/Projects/6/Manual_Nash_E.pdf"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">02</span>
+                        <h3>Nash Equilibrium Manual</h3>
+                        <p>
+                            Course manual covering Nash equilibrium, the Prisoner's
+                            Dilemma, Pareto optimality and the behaviour simulation.
+                        </p>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
