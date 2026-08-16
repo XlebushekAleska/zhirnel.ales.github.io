@@ -3386,3 +3386,155 @@ footer {
         min-width: 8.5rem !important;
     }
 }
+
+
+/* ==========================================================
+   Project 4 — payoff matrix layout fix
+   ========================================================== */
+
+.payoff-matrix {
+    width: auto;
+    min-width: 0;
+
+    margin-inline: auto;
+
+    table-layout: fixed;
+}
+
+
+/* ---------- Fixed strategy column ---------- */
+
+.matrix-axis-corner,
+.row-strategy-header {
+    width: 10rem !important;
+    min-width: 10rem !important;
+    max-width: 10rem !important;
+}
+
+
+/* ---------- Fixed payoff columns ---------- */
+
+.payoff-matrix thead th:not(.matrix-axis-corner),
+.payoff-cell {
+    width: 14rem;
+    min-width: 14rem;
+    max-width: 14rem;
+}
+
+
+/* ---------- Matrix container ---------- */
+
+.game-matrix-shell {
+    width: fit-content;
+    max-width: 100%;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.game-matrix-scroll {
+    width: fit-content;
+    max-width: 100%;
+}
+
+
+/* ---------- More compact payoff cells ---------- */
+
+.payoff-cell {
+    min-height: 6.4rem;
+
+    padding:
+        0.75rem
+        0.7rem
+        1.7rem;
+}
+
+.payoff-pair {
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    gap: 0.35rem;
+}
+
+
+/* ---------- Make Player 1 and Player 2 easier to distinguish ---------- */
+
+.player-one-payoff {
+    border-color:
+        rgba(70, 140, 225, 0.24);
+
+    background-color:
+        rgba(235, 246, 255, 0.94);
+}
+
+.player-two-payoff {
+    border-color:
+        rgba(164, 95, 218, 0.24);
+
+    background-color:
+        rgba(248, 239, 255, 0.94);
+}
+
+
+/* ---------- Do not clutter every cell with badges ---------- */
+
+.analysis-badges {
+    position: absolute;
+
+    left: 0.45rem;
+    right: 0.45rem;
+    bottom: 0.35rem;
+
+    min-height: 0;
+    margin-top: 0;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity
+        0.18s
+        ease;
+}
+
+
+/*
+    Text labels appear only when the cell is being inspected.
+
+    The permanent visual indicators remain:
+    blue edge   = Player 1 best response
+    purple edge = Player 2 best response
+    orange      = Nash equilibrium
+    green       = Pareto-optimal
+*/
+
+.payoff-cell:hover .analysis-badges,
+.payoff-cell.is-selected .analysis-badges,
+.payoff-cell:focus-within .analysis-badges {
+    opacity: 1;
+}
+
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 36rem) {
+
+    .matrix-axis-corner,
+    .row-strategy-header {
+        width: 8.5rem !important;
+        min-width: 8.5rem !important;
+        max-width: 8.5rem !important;
+    }
+
+    .payoff-matrix thead th:not(.matrix-axis-corner),
+    .payoff-cell {
+        width: 12rem;
+        min-width: 12rem;
+        max-width: 12rem;
+    }
+}
