@@ -3553,6 +3553,7 @@ footer {
 /* ---------- Shared Project 5 helpers ---------- */
 
 .information-formula-card {
+    margin-top: clamp(1rem, 2.2vw, 2rem);
     align-items: center;
 }
 
