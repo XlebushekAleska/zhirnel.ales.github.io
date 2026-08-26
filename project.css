@@ -3538,3 +3538,974 @@ footer {
         max-width: 12rem;
     }
 }
+
+
+
+
+
+
+
+/* ==========================================================
+   PROJECT 5 — MUTUAL INFORMATION AND NOISY CHANNELS
+   Append this block to the end of project.css
+   ========================================================== */
+
+/* ---------- Shared Project 5 helpers ---------- */
+
+.information-formula-card {
+    align-items: center;
+}
+
+.formula-card-wide {
+    min-width: min(100%, 28rem);
+    display: grid;
+    gap: 0.6rem;
+}
+
+.formula-card-wide code {
+    display: block;
+}
+
+.information-identity-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.7rem;
+
+    margin-top: 1rem;
+}
+
+.information-identity-card {
+    min-width: 0;
+
+    padding: 0.9rem;
+
+    display: grid;
+    gap: 0.45rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+    border-radius: 0.9rem;
+
+    background-color: rgba(255, 255, 255, 0.66);
+}
+
+.information-identity-card span {
+    color: var(--secondary-text);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.information-identity-card code {
+    color: var(--accent-dark);
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.inline-project-link {
+    margin-top: 0.8rem;
+
+    display: inline-flex;
+    align-items: center;
+
+    color: var(--accent-dark);
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.inline-project-link:hover {
+    color: #7346d3;
+    transform: translateX(0.15rem);
+}
+
+.inline-project-link:focus-visible {
+    outline: 0.18rem solid rgba(95, 110, 232, 0.38);
+    outline-offset: 0.18rem;
+    border-radius: 0.35rem;
+}
+
+.project5-metric-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.metric-card-emphasis {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(234, 240, 255, 0.94),
+            rgba(239, 229, 255, 0.9)
+        );
+}
+
+.metric-card-capacity {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(229, 247, 242, 0.94),
+            rgba(238, 244, 255, 0.9)
+        );
+}
+
+/* ---------- Joint probability calculator ---------- */
+
+.joint-calculator-layout {
+    align-items: start;
+}
+
+.joint-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0.35rem 0 0.2rem;
+
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.15);
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.58);
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 232, 0.42) transparent;
+}
+
+.joint-table-wrapper::-webkit-scrollbar {
+    height: 0.55rem;
+}
+
+.joint-table-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 999rem;
+    background-color: rgba(95, 110, 232, 0.42);
+}
+
+.joint-probability-table {
+    width: 100%;
+    min-width: 34rem;
+
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    color: var(--main-text);
+}
+
+.joint-probability-table th,
+.joint-probability-table td {
+    padding: 0.75rem;
+
+    border-right:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.1);
+    border-bottom:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.1);
+
+    text-align: center;
+    vertical-align: middle;
+}
+
+.joint-probability-table tr > *:last-child {
+    border-right: none;
+}
+
+.joint-probability-table tfoot tr:last-child > * {
+    border-bottom: none;
+}
+
+.joint-probability-table thead th,
+.joint-probability-table tbody th,
+.joint-probability-table tfoot th {
+    color: var(--accent-dark);
+    background-color: rgba(237, 239, 255, 0.84);
+
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.joint-probability-input {
+    width: 100%;
+    min-width: 5.5rem;
+
+    padding: 0.7rem 0.75rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.16);
+    border-radius: 0.75rem;
+
+    color: var(--main-text);
+    background-color: rgba(255, 255, 255, 0.86);
+
+    font: inherit;
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-weight: 800;
+    text-align: center;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.joint-probability-input:focus {
+    border-color: rgba(95, 110, 232, 0.52);
+    background-color: white;
+
+    box-shadow:
+        0 0 0 0.2rem
+        rgba(95, 110, 232, 0.1);
+}
+
+.joint-marginal,
+.joint-total {
+    color: var(--accent-dark);
+    background-color: rgba(95, 110, 232, 0.06);
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-weight: 800;
+}
+
+.joint-total {
+    color: #6a38d2;
+    background-color: rgba(122, 75, 226, 0.09);
+}
+
+.project5-example-buttons,
+.project5-preset-buttons,
+.project5-simulator-buttons {
+    margin-top: 0.2rem;
+}
+
+/* ---------- BSC controls ---------- */
+
+.bsc-main-layout {
+    grid-template-columns:
+        minmax(18rem, 0.78fr)
+        minmax(0, 1.22fr);
+    align-items: stretch;
+}
+
+.bsc-details-layout {
+    margin-top: 1rem;
+    align-items: stretch;
+}
+
+.project5-slider-group {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.project5-slider-group + .project5-slider-group {
+    margin-top: 0.25rem;
+}
+
+.project5-slider-group > label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    color: var(--main-text);
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
+.project5-slider-group > label strong {
+    flex: 0 0 auto;
+
+    color: var(--accent-dark);
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+}
+
+.range-number-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 6.8rem;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.range-number-row input[type="range"] {
+    width: 100%;
+    min-width: 0;
+
+    accent-color: var(--accent);
+    cursor: pointer;
+}
+
+.project5-percentage-input {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.16);
+    border-radius: 0.8rem;
+
+    background-color: rgba(255, 255, 255, 0.82);
+
+    overflow: hidden;
+}
+
+.project5-percentage-input input {
+    width: 100%;
+    min-width: 0;
+
+    padding: 0.65rem 0.2rem 0.65rem 0.7rem;
+
+    border: 0;
+    outline: 0;
+
+    color: var(--main-text);
+    background: transparent;
+
+    font: inherit;
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-weight: 800;
+    text-align: right;
+}
+
+.project5-percentage-input span {
+    padding-right: 0.7rem;
+
+    color: var(--secondary-text);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.compact-number-input::-webkit-outer-spin-button,
+.compact-number-input::-webkit-inner-spin-button,
+.joint-probability-input::-webkit-outer-spin-button,
+.joint-probability-input::-webkit-inner-spin-button {
+    margin: 0;
+    -webkit-appearance: none;
+}
+
+.compact-number-input,
+.joint-probability-input {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+/* ---------- Channel diagram ---------- */
+
+.channel-visualization-card {
+    min-width: 0;
+}
+
+.channel-state-badge {
+    flex: 0 0 auto;
+
+    padding: 0.55rem 0.75rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.18);
+    border-radius: 999rem;
+
+    color: var(--accent-dark);
+    background-color: rgba(241, 242, 255, 0.88);
+
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.channel-diagram-shell {
+    width: 100%;
+
+    margin-top: 1rem;
+
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.13);
+    border-radius: 1.1rem;
+
+    background:
+        radial-gradient(
+            circle at 50% 50%,
+            rgba(95, 110, 232, 0.08),
+            transparent 52%
+        ),
+        rgba(255, 255, 255, 0.58);
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 232, 0.4) transparent;
+}
+
+.channel-diagram-svg {
+    width: 100%;
+    min-width: 36rem;
+    height: auto;
+
+    display: block;
+}
+
+.channel-side-title {
+    fill: var(--secondary-text);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+.channel-path {
+    fill: none;
+    stroke-linecap: round;
+
+    transition:
+        opacity 0.2s ease,
+        stroke-width 0.2s ease;
+}
+
+.channel-path-correct {
+    stroke: rgba(83, 107, 219, 0.7);
+    stroke-width: 4;
+}
+
+.channel-path-noise {
+    stroke: rgba(160, 85, 214, 0.62);
+    stroke-width: 3.4;
+    stroke-dasharray: 8 7;
+}
+
+.channel-arrow-head-main {
+    fill: rgba(83, 107, 219, 0.86);
+}
+
+.channel-arrow-head-noise {
+    fill: rgba(160, 85, 214, 0.84);
+}
+
+.channel-path-label {
+    paint-order: stroke;
+    stroke: rgba(255, 255, 255, 0.95);
+    stroke-width: 8px;
+    stroke-linejoin: round;
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 18px;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+.channel-path-label-correct {
+    fill: #4d60cc;
+}
+
+.channel-path-label-noise {
+    fill: #8744c7;
+}
+
+.channel-node {
+    stroke-width: 3;
+
+    filter:
+        drop-shadow(
+            0 8px 12px
+            rgba(64, 74, 130, 0.14)
+        );
+}
+
+.channel-input-node {
+    fill: rgba(237, 241, 255, 0.98);
+    stroke: rgba(83, 107, 219, 0.55);
+}
+
+.channel-output-node {
+    fill: rgba(248, 239, 255, 0.98);
+    stroke: rgba(160, 85, 214, 0.48);
+}
+
+.channel-node-symbol {
+    fill: var(--main-text);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+    font-size: 27px;
+    font-weight: 800;
+    text-anchor: middle;
+}
+
+/* ---------- Channel transition matrix ---------- */
+
+.channel-matrix-wrapper {
+    margin-top: 1rem;
+
+    overflow: hidden;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+    border-radius: 1rem;
+}
+
+.channel-matrix-table {
+    width: 100%;
+
+    border-collapse: collapse;
+    table-layout: fixed;
+
+    text-align: center;
+}
+
+.channel-matrix-table th,
+.channel-matrix-table td {
+    padding: 0.9rem;
+
+    border-right:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.1);
+    border-bottom:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.1);
+}
+
+.channel-matrix-table tr > *:last-child {
+    border-right: none;
+}
+
+.channel-matrix-table tbody tr:last-child > * {
+    border-bottom: none;
+}
+
+.channel-matrix-table th {
+    color: var(--accent-dark);
+    background-color: rgba(237, 239, 255, 0.78);
+
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.channel-matrix-table td {
+    background-color: rgba(255, 255, 255, 0.65);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+/* ---------- Capacity comparison ---------- */
+
+.capacity-comparison {
+    display: grid;
+    gap: 1rem;
+
+    margin-top: 1rem;
+}
+
+.capacity-row {
+    display: grid;
+    gap: 0.5rem;
+}
+
+.capacity-row-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    color: var(--secondary-text);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.capacity-row-label strong {
+    color: var(--main-text);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+}
+
+.capacity-meter {
+    width: 100%;
+    height: 0.85rem;
+
+    overflow: hidden;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.12);
+    border-radius: 999rem;
+
+    background-color: rgba(95, 110, 232, 0.08);
+}
+
+.capacity-meter-fill {
+    width: 0;
+    height: 100%;
+
+    border-radius: inherit;
+
+    transition: width 0.28s ease;
+}
+
+.mutual-information-fill {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(95, 110, 232, 0.82),
+            rgba(143, 99, 227, 0.82)
+        );
+}
+
+.capacity-fill {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(74, 177, 151, 0.82),
+            rgba(95, 110, 232, 0.78)
+        );
+}
+
+.project5-capacity-formula {
+    margin-top: 1.1rem;
+}
+
+/* ---------- Transmission simulator ---------- */
+
+.simulator-layout {
+    align-items: start;
+}
+
+.simulator-channel-summary {
+    padding: 0.85rem 0.9rem;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.35rem 0.8rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.13);
+    border-radius: 0.9rem;
+
+    background-color: rgba(95, 110, 232, 0.06);
+}
+
+.simulator-channel-summary span {
+    color: var(--main-text);
+    font-size: 0.84rem;
+    font-weight: 800;
+}
+
+.simulator-channel-summary strong {
+    color: var(--accent-dark);
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+}
+
+.simulator-channel-summary small {
+    grid-column: 1 / -1;
+
+    color: var(--secondary-text);
+    line-height: 1.4;
+}
+
+.transmission-legend {
+    flex: 0 0 auto;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.8rem;
+
+    color: var(--secondary-text);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.transmission-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.legend-bit {
+    width: 0.85rem;
+    height: 0.85rem;
+
+    display: inline-block;
+
+    border-radius: 0.25rem;
+}
+
+.legend-bit-normal {
+    background-color: rgba(95, 110, 232, 0.22);
+    border: 0.08rem solid rgba(95, 110, 232, 0.32);
+}
+
+.legend-bit-error {
+    background-color: rgba(234, 94, 126, 0.22);
+    border: 0.08rem solid rgba(214, 61, 98, 0.54);
+}
+
+.bit-stream-pair {
+    display: grid;
+    gap: 1rem;
+
+    margin-top: 1rem;
+}
+
+.bit-stream-row {
+    display: grid;
+    grid-template-columns: 5.2rem minmax(0, 1fr);
+    align-items: start;
+    gap: 0.8rem;
+}
+
+.bit-stream-label {
+    padding-top: 0.45rem;
+
+    color: var(--accent-dark);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.05rem;
+    text-transform: uppercase;
+}
+
+.bit-stream {
+    min-height: 3.3rem;
+    max-height: 18rem;
+
+    padding: 0.7rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0.3rem;
+
+    overflow-y: auto;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.13);
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.58);
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 110, 232, 0.4) transparent;
+}
+
+.bit-token {
+    width: 1.85rem;
+    min-width: 1.85rem;
+    height: 1.85rem;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.22);
+    border-radius: 0.48rem;
+
+    color: var(--accent-dark);
+    background-color: rgba(95, 110, 232, 0.09);
+
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 0.86rem;
+    font-weight: 800;
+
+    transition:
+        transform 0.18s ease,
+        box-shadow 0.18s ease;
+}
+
+.bit-token:hover {
+    transform: translateY(-0.08rem);
+
+    box-shadow:
+        0 0.35rem 0.7rem
+        rgba(64, 74, 130, 0.12);
+}
+
+.bit-token-error {
+    color: #b92e55;
+    border-color: rgba(214, 61, 98, 0.45);
+    background-color: rgba(234, 94, 126, 0.16);
+
+    box-shadow:
+        inset 0 0 0 0.08rem
+        rgba(214, 61, 98, 0.08);
+}
+
+.bit-stream-placeholder {
+    color: var(--secondary-text);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* ---------- Observed transitions ---------- */
+
+.observed-transition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.8rem;
+
+    margin-top: 1rem;
+}
+
+.observed-transition-card {
+    min-width: 0;
+
+    padding: 1rem;
+
+    display: grid;
+    gap: 0.35rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.13);
+    border-radius: 1rem;
+
+    background-color: rgba(255, 255, 255, 0.64);
+    text-align: center;
+}
+
+.observed-transition-card span {
+    color: var(--accent-dark);
+    font-family:
+        Consolas,
+        "Courier New",
+        monospace;
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+
+.observed-transition-card strong {
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+}
+
+.observed-transition-card small {
+    color: var(--secondary-text);
+    line-height: 1.35;
+}
+
+/* ---------- Project 5 responsive rules ---------- */
+
+@media (max-width: 76rem) {
+    .project5-metric-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 64rem) {
+    .bsc-main-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .observed-transition-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 52rem) {
+    .information-identity-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .project5-metric-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .range-number-row {
+        grid-template-columns: minmax(0, 1fr) 6.2rem;
+    }
+
+    .transmission-legend {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 36rem) {
+    .project5-metric-grid,
+    .observed-transition-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .range-number-row {
+        grid-template-columns: 1fr;
+    }
+
+    .project5-percentage-input {
+        width: 7rem;
+        justify-self: end;
+    }
+
+    .bit-stream-row {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+    }
+
+    .bit-stream-label {
+        padding-top: 0;
+    }
+
+    .channel-state-badge {
+        align-self: flex-start;
+    }
+}
