@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Project 5 | Mutual Information and Noisy Channels</title>
+
+    <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+    <link rel="stylesheet" href="../project.css">
+    <script src="project5.js" defer></script>
+</head>
+
+<body>
+    <div class="page-wrapper">
+        <header class="top-panel">
+            <a href="../index.html" class="logo" aria-label="Go to main page">
+                IT
+            </a>
+
+            <nav class="project-navigation" aria-label="Project navigation">
+                <a href="#overview">Overview</a>
+                <a href="#mutual-information">Mutual Information</a>
+                <a href="#bsc">Binary Channel</a>
+                <a href="#simulator">Transmission</a>
+                <a href="#sources">Sources</a>
+            </nav>
+        </header>
+
+        <main>
+            <section class="project-hero" id="top">
+                <p class="course-label">Information Theory</p>
+
+                <h1>Project 5</h1>
+                <h2>Mutual Information and Noisy Channels</h2>
+
+                <p class="hero-description">
+                    Explore joint and conditional entropy, mutual information,
+                    the binary symmetric channel, channel capacity and noisy
+                    binary transmission in one interactive page.
+                </p>
+
+                <div class="hero-meta">
+                    <div class="meta-card">
+                        <span class="meta-label">Student</span>
+                        <strong>Ales Zhirnel</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Instructor</span>
+                        <strong>Andrzej Jaroszewicz</strong>
+                    </div>
+
+                    <div class="meta-card">
+                        <span class="meta-label">Channel model</span>
+                        <strong>Binary Symmetric Channel</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="overview">
+                <div class="section-heading">
+                    <p class="section-label">Overview</p>
+                    <h2>From entropy to communication</h2>
+                    <p class="section-description">
+                        Entropy describes uncertainty in a source. Mutual information
+                        measures how much observing one variable tells us about another,
+                        while channel capacity describes the greatest reliable information
+                        rate supported by a communication channel.
+                    </p>
+                </div>
+
+                <div class="section-grid">
+                    <article class="theory-card">
+                        <h3>Four related quantities</h3>
+
+                        <p>
+                            For two random variables X and Y, joint entropy describes
+                            their uncertainty together. Conditional entropy describes the
+                            uncertainty that remains in one variable after the other is known.
+                        </p>
+
+                        <div class="information-identity-grid">
+                            <div class="information-identity-card">
+                                <span>Joint entropy</span>
+                                <code>H(X,Y)</code>
+                            </div>
+
+                            <div class="information-identity-card">
+                                <span>Conditional entropy</span>
+                                <code>H(X|Y)</code>
+                            </div>
+
+                            <div class="information-identity-card">
+                                <span>Mutual information</span>
+                                <code>I(X;Y)</code>
+                            </div>
+
+                            <div class="information-identity-card">
+                                <span>Channel capacity</span>
+                                <code>C = max I(X;Y)</code>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>Why this completes the chain</h3>
+
+                        <p>
+                            Earlier projects studied probability, entropy, compression and
+                            error-correcting codes. A noisy channel connects these ideas:
+                            uncertainty enters during transmission, mutual information tells
+                            us how much of the input survives, and coding can be used to
+                            communicate reliably below the channel capacity.
+                        </p>
+
+                        <div class="example-box">
+                            <span class="example-label">Connection</span>
+                            <h4>From Project 2 to Project 5</h4>
+                            <p>
+                                The Hamming Code project shows one concrete method for
+                                correcting transmission errors. This project instead studies
+                                the information-theoretic limits of the noisy channel itself.
+                            </p>
+                            <a class="inline-project-link" href="../project2/project2.html">
+                                Open Project 2 — Hamming Code
+                            </a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="section-card wide-card information-formula-card">
+                    <div class="text-block">
+                        <h3>Equivalent definitions of mutual information</h3>
+                        <p>
+                            Mutual information is the reduction in uncertainty about X after
+                            Y is observed. The same quantity can also be written using joint
+                            entropy or by reversing the roles of X and Y.
+                        </p>
+                    </div>
+
+                    <div class="formula-card formula-card-wide">
+                        <span class="formula-label">Core identities</span>
+                        <code>I(X;Y) = H(X) − H(X|Y)</code>
+                        <code>I(X;Y) = H(Y) − H(Y|X)</code>
+                        <code>I(X;Y) = H(X) + H(Y) − H(X,Y)</code>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="mutual-information">
+                <div class="section-heading">
+                    <p class="section-label">Part 01</p>
+                    <h2>Joint Distribution and Mutual Information</h2>
+                    <p class="section-description">
+                        Enter a complete 2×2 joint distribution for two binary random
+                        variables. The calculator derives marginal probabilities, entropies,
+                        conditional entropies and mutual information.
+                    </p>
+                </div>
+
+                <div class="section-grid joint-calculator-layout">
+                    <article class="calculator-card">
+                        <h3>Joint probability table</h3>
+
+                        <div class="calculator-box">
+                            <p class="calculator-note">
+                                Probabilities must be non-negative and total 1. Use Normalize
+                                to rescale any positive weights automatically.
+                            </p>
+
+                            <div class="joint-table-wrapper">
+                                <table class="joint-probability-table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">X \ Y</th>
+                                            <th scope="col">Y = 0</th>
+                                            <th scope="col">Y = 1</th>
+                                            <th scope="col">P(X)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row">X = 0</th>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    id="joint-00"
+                                                    class="joint-probability-input"
+                                                    min="0"
+                                                    max="1"
+                                                    step="any"
+                                                    value="0.4"
+                                                    aria-label="Probability X equals 0 and Y equals 0"
+                                                >
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    id="joint-01"
+                                                    class="joint-probability-input"
+                                                    min="0"
+                                                    max="1"
+                                                    step="any"
+                                                    value="0.1"
+                                                    aria-label="Probability X equals 0 and Y equals 1"
+                                                >
+                                            </td>
+                                            <td class="joint-marginal" id="marginal-x0">0.5</td>
+                                        </tr>
+
+                                        <tr>
+                                            <th scope="row">X = 1</th>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    id="joint-10"
+                                                    class="joint-probability-input"
+                                                    min="0"
+                                                    max="1"
+                                                    step="any"
+                                                    value="0.1"
+                                                    aria-label="Probability X equals 1 and Y equals 0"
+                                                >
+                                            </td>
+                                            <td>
+                                                <input
+                                                    type="number"
+                                                    id="joint-11"
+                                                    class="joint-probability-input"
+                                                    min="0"
+                                                    max="1"
+                                                    step="any"
+                                                    value="0.4"
+                                                    aria-label="Probability X equals 1 and Y equals 1"
+                                                >
+                                            </td>
+                                            <td class="joint-marginal" id="marginal-x1">0.5</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th scope="row">P(Y)</th>
+                                            <td class="joint-marginal" id="marginal-y0">0.5</td>
+                                            <td class="joint-marginal" id="marginal-y1">0.5</td>
+                                            <td class="joint-total" id="joint-total">1</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="button-row three-button-row project5-example-buttons">
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="joint-independent-example"
+                                >Independent</button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="joint-correlated-example"
+                                >Correlated</button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="joint-perfect-example"
+                                >Perfect match</button>
+                            </div>
+
+                            <div class="button-row">
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="normalize-joint"
+                                >Normalize</button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button"
+                                    id="calculate-joint"
+                                >Calculate information</button>
+                            </div>
+
+                            <div
+                                class="calculator-result"
+                                id="joint-result"
+                                aria-live="polite"
+                            >Result will appear here.</div>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>How to read the result</h3>
+
+                        <p>
+                            If X and Y are independent, knowing Y does not reduce uncertainty
+                            about X, so their mutual information is zero. If Y determines X
+                            perfectly, the mutual information can reach the entropy of X.
+                        </p>
+
+                        <div class="example-box">
+                            <span class="example-label">Independent example</span>
+                            <h4>Four cells equal to 0.25</h4>
+                            <p>
+                                X and Y are both fair binary variables, but they are unrelated.
+                                H(X) = H(Y) = 1 bit while I(X;Y) = 0 bits.
+                            </p>
+                        </div>
+
+                        <div class="example-box">
+                            <span class="example-label">Perfect dependence</span>
+                            <h4>P(0,0) = P(1,1) = 0.5</h4>
+                            <p>
+                                Y always equals X. One variable completely reveals the other,
+                                so I(X;Y) = 1 bit.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="metric-grid project5-metric-grid" id="joint-metrics">
+                    <div class="metric-card">
+                        <span>H(X)</span>
+                        <strong>—</strong>
+                        <small>bits</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>H(Y)</span>
+                        <strong>—</strong>
+                        <small>bits</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>H(X,Y)</span>
+                        <strong>—</strong>
+                        <small>joint entropy</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>H(X|Y)</span>
+                        <strong>—</strong>
+                        <small>remaining X uncertainty</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>H(Y|X)</span>
+                        <strong>—</strong>
+                        <small>remaining Y uncertainty</small>
+                    </div>
+                    <div class="metric-card metric-card-emphasis">
+                        <span>I(X;Y)</span>
+                        <strong>—</strong>
+                        <small>mutual information</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="bsc">
+                <div class="section-heading">
+                    <p class="section-label">Part 02</p>
+                    <h2>Binary Symmetric Channel</h2>
+                    <p class="section-description">
+                        A Binary Symmetric Channel (BSC) transmits a bit correctly with
+                        probability 1 − p and flips it with probability p. For the usual
+                        noise range 0 ≤ p ≤ 0.5, capacity falls from 1 bit/use to 0.
+                    </p>
+                </div>
+
+                <div class="section-grid bsc-main-layout">
+                    <article class="calculator-card">
+                        <h3>Channel controls</h3>
+
+                        <div class="calculator-box">
+                            <div class="project5-slider-group">
+                                <label for="source-one-probability-range">
+                                    <span>Source probability P(X = 1)</span>
+                                    <strong id="source-one-readout">50%</strong>
+                                </label>
+
+                                <div class="range-number-row">
+                                    <input
+                                        type="range"
+                                        id="source-one-probability-range"
+                                        min="0"
+                                        max="100"
+                                        step="1"
+                                        value="50"
+                                    >
+
+                                    <div class="percentage-input-wrap project5-percentage-input">
+                                        <input
+                                            type="number"
+                                            id="source-one-probability"
+                                            class="compact-number-input"
+                                            min="0"
+                                            max="100"
+                                            step="1"
+                                            value="50"
+                                        >
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="project5-slider-group">
+                                <label for="crossover-probability-range">
+                                    <span>Crossover probability p</span>
+                                    <strong id="crossover-readout">10%</strong>
+                                </label>
+
+                                <div class="range-number-row">
+                                    <input
+                                        type="range"
+                                        id="crossover-probability-range"
+                                        min="0"
+                                        max="50"
+                                        step="1"
+                                        value="10"
+                                    >
+
+                                    <div class="percentage-input-wrap project5-percentage-input">
+                                        <input
+                                            type="number"
+                                            id="crossover-probability"
+                                            class="compact-number-input"
+                                            min="0"
+                                            max="50"
+                                            step="1"
+                                            value="10"
+                                        >
+                                        <span>%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="button-row project5-preset-buttons">
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    data-bsc-preset="perfect"
+                                >Perfect channel</button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    data-bsc-preset="moderate"
+                                >10% noise</button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    data-bsc-preset="random"
+                                >50% noise</button>
+                            </div>
+
+                            <div
+                                class="calculator-result"
+                                id="bsc-result"
+                                aria-live="polite"
+                            >Channel metrics will appear here.</div>
+                        </div>
+                    </article>
+
+                    <article class="visualization-card channel-visualization-card">
+                        <div class="visualization-heading-row">
+                            <div>
+                                <h3>Channel diagram</h3>
+                                <p>
+                                    Straight paths are correct transmissions. Diagonal paths
+                                    represent bit flips caused by the channel.
+                                </p>
+                            </div>
+
+                            <span class="channel-state-badge" id="channel-state-badge">
+                                10% crossover
+                            </span>
+                        </div>
+
+                        <div class="channel-diagram-shell">
+                            <svg
+                                class="channel-diagram-svg"
+                                viewBox="0 0 760 360"
+                                role="img"
+                                aria-labelledby="channel-diagram-title channel-diagram-description"
+                            >
+                                <title id="channel-diagram-title">Binary symmetric channel diagram</title>
+                                <desc id="channel-diagram-description">
+                                    Two binary input states connect to two binary output states through
+                                    correct-transmission and crossover paths.
+                                </desc>
+
+                                <defs>
+                                    <marker
+                                        id="project5-arrow-main"
+                                        markerWidth="10"
+                                        markerHeight="10"
+                                        refX="9"
+                                        refY="3"
+                                        orient="auto"
+                                        markerUnits="strokeWidth"
+                                    >
+                                        <path d="M0,0 L0,6 L9,3 z" class="channel-arrow-head-main"></path>
+                                    </marker>
+
+                                    <marker
+                                        id="project5-arrow-noise"
+                                        markerWidth="10"
+                                        markerHeight="10"
+                                        refX="9"
+                                        refY="3"
+                                        orient="auto"
+                                        markerUnits="strokeWidth"
+                                    >
+                                        <path d="M0,0 L0,6 L9,3 z" class="channel-arrow-head-noise"></path>
+                                    </marker>
+                                </defs>
+
+                                <text x="105" y="34" class="channel-side-title">Input X</text>
+                                <text x="655" y="34" class="channel-side-title">Output Y</text>
+
+                                <path
+                                    d="M 160 100 C 290 100, 470 100, 600 100"
+                                    class="channel-path channel-path-correct"
+                                    marker-end="url(#project5-arrow-main)"
+                                ></path>
+
+                                <path
+                                    d="M 160 260 C 290 260, 470 260, 600 260"
+                                    class="channel-path channel-path-correct"
+                                    marker-end="url(#project5-arrow-main)"
+                                ></path>
+
+                                <path
+                                    d="M 160 110 C 285 130, 470 225, 600 250"
+                                    class="channel-path channel-path-noise"
+                                    marker-end="url(#project5-arrow-noise)"
+                                ></path>
+
+                                <path
+                                    d="M 160 250 C 285 225, 470 130, 600 110"
+                                    class="channel-path channel-path-noise"
+                                    marker-end="url(#project5-arrow-noise)"
+                                ></path>
+
+                                <text x="380" y="84" class="channel-path-label channel-path-label-correct" id="keep-zero-label">0.90</text>
+                                <text x="380" y="286" class="channel-path-label channel-path-label-correct" id="keep-one-label">0.90</text>
+                                <text x="332" y="176" class="channel-path-label channel-path-label-noise" id="flip-zero-label">0.10</text>
+                                <text x="430" y="176" class="channel-path-label channel-path-label-noise" id="flip-one-label">0.10</text>
+
+                                <g transform="translate(120 100)">
+                                    <circle r="41" class="channel-node channel-input-node"></circle>
+                                    <text x="0" y="8" class="channel-node-symbol">0</text>
+                                </g>
+
+                                <g transform="translate(120 260)">
+                                    <circle r="41" class="channel-node channel-input-node"></circle>
+                                    <text x="0" y="8" class="channel-node-symbol">1</text>
+                                </g>
+
+                                <g transform="translate(640 100)">
+                                    <circle r="41" class="channel-node channel-output-node"></circle>
+                                    <text x="0" y="8" class="channel-node-symbol">0</text>
+                                </g>
+
+                                <g transform="translate(640 260)">
+                                    <circle r="41" class="channel-node channel-output-node"></circle>
+                                    <text x="0" y="8" class="channel-node-symbol">1</text>
+                                </g>
+                            </svg>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="section-grid bsc-details-layout">
+                    <article class="visualization-card">
+                        <h3>Transition matrix</h3>
+                        <p>
+                            Each row gives the conditional distribution of the output for
+                            one fixed input bit.
+                        </p>
+
+                        <div class="channel-matrix-wrapper">
+                            <table class="channel-matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th>P(Y|X)</th>
+                                        <th>Y = 0</th>
+                                        <th>Y = 1</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>X = 0</th>
+                                        <td id="channel-matrix-00">0.90</td>
+                                        <td id="channel-matrix-01">0.10</td>
+                                    </tr>
+                                    <tr>
+                                        <th>X = 1</th>
+                                        <td id="channel-matrix-10">0.10</td>
+                                        <td id="channel-matrix-11">0.90</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+
+                    <article class="visualization-card">
+                        <h3>Mutual information versus capacity</h3>
+                        <p>
+                            The current source distribution produces I(X;Y). Capacity is
+                            the maximum possible mutual information over all input distributions.
+                        </p>
+
+                        <div class="capacity-comparison">
+                            <div class="capacity-row">
+                                <div class="capacity-row-label">
+                                    <span>Current I(X;Y)</span>
+                                    <strong id="mutual-information-readout">—</strong>
+                                </div>
+                                <div class="capacity-meter" aria-hidden="true">
+                                    <div class="capacity-meter-fill mutual-information-fill" id="mutual-information-fill"></div>
+                                </div>
+                            </div>
+
+                            <div class="capacity-row">
+                                <div class="capacity-row-label">
+                                    <span>Channel capacity C</span>
+                                    <strong id="capacity-readout">—</strong>
+                                </div>
+                                <div class="capacity-meter" aria-hidden="true">
+                                    <div class="capacity-meter-fill capacity-fill" id="capacity-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="formula-line project5-capacity-formula">
+                            <code>C = 1 − H₂(p)</code>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="metric-grid project5-metric-grid" id="bsc-metrics">
+                    <div class="metric-card">
+                        <span>H(X)</span>
+                        <strong>—</strong>
+                        <small>source entropy</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>H(Y)</span>
+                        <strong>—</strong>
+                        <small>output entropy</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>H(Y|X)</span>
+                        <strong>—</strong>
+                        <small>channel uncertainty</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>H(X|Y)</span>
+                        <strong>—</strong>
+                        <small>uncertainty after observing Y</small>
+                    </div>
+                    <div class="metric-card metric-card-emphasis">
+                        <span>I(X;Y)</span>
+                        <strong>—</strong>
+                        <small>information transmitted</small>
+                    </div>
+                    <div class="metric-card metric-card-capacity">
+                        <span>Capacity</span>
+                        <strong>—</strong>
+                        <small>bits per channel use</small>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section" id="simulator">
+                <div class="section-heading">
+                    <p class="section-label">Part 03</p>
+                    <h2>Noisy Binary Transmission Simulator</h2>
+                    <p class="section-description">
+                        Send a real bit sequence through the current Binary Symmetric Channel.
+                        Every bit is flipped independently with probability p, so repeated runs
+                        produce slightly different observed error rates.
+                    </p>
+                </div>
+
+                <div class="section-grid simulator-layout">
+                    <article class="calculator-card">
+                        <h3>Message and channel</h3>
+
+                        <div class="calculator-box">
+                            <label class="input-group" for="transmission-input">
+                                <span>Binary message</span>
+                                <textarea
+                                    id="transmission-input"
+                                    maxlength="4096"
+                                    spellcheck="false"
+                                    placeholder="Enter a binary sequence"
+                                >1011010010110101110010100110</textarea>
+                            </label>
+
+                            <div class="text-counter" id="transmission-counter">
+                                28 / 4,096 bits
+                            </div>
+
+                            <div class="simulator-channel-summary">
+                                <span>Current crossover probability</span>
+                                <strong id="simulator-crossover-readout">10%</strong>
+                                <small>Change p in the Binary Symmetric Channel section above.</small>
+                            </div>
+
+                            <div class="button-row project5-simulator-buttons">
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="balanced-sample-button"
+                                >Balanced sample</button>
+
+                                <button
+                                    type="button"
+                                    class="calculator-button secondary-button"
+                                    id="random-sample-button"
+                                >Random 256 bits</button>
+                            </div>
+
+                            <button
+                                type="button"
+                                class="calculator-button"
+                                id="transmit-button"
+                            >Transmit through channel</button>
+
+                            <div
+                                class="calculator-result"
+                                id="transmission-result"
+                                aria-live="polite"
+                            >Transmit the message to generate a noisy output.</div>
+                        </div>
+                    </article>
+
+                    <article class="theory-card">
+                        <h3>What the experiment measures</h3>
+
+                        <p>
+                            The theoretical crossover probability p is the long-run bit error
+                            rate of the BSC. A finite message gives an observed error rate that
+                            fluctuates around p.
+                        </p>
+
+                        <div class="example-box">
+                            <span class="example-label">Finite-sample estimate</span>
+                            <h4>Empirical mutual information</h4>
+                            <p>
+                                The simulator also estimates a 2×2 joint distribution from the
+                                transmitted and received bit pairs and calculates mutual information
+                                from those observed frequencies.
+                            </p>
+                        </div>
+
+                        <div class="example-box limitation-box">
+                            <span class="example-label">Important distinction</span>
+                            <h4>Capacity is not an uncoded success rate</h4>
+                            <p>
+                                Channel capacity is a theoretical reliable communication rate when
+                                sufficiently powerful coding is allowed. It is not the percentage of
+                                bits that survive one uncoded transmission.
+                            </p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="metric-grid project5-metric-grid simulator-metric-grid" id="transmission-metrics">
+                    <div class="metric-card">
+                        <span>Bits transmitted</span>
+                        <strong>—</strong>
+                        <small>channel uses</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Bit flips</span>
+                        <strong>—</strong>
+                        <small>observed errors</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Observed BER</span>
+                        <strong>—</strong>
+                        <small>errors / bits</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Theoretical I(X;Y)</span>
+                        <strong>—</strong>
+                        <small>using message bias and p</small>
+                    </div>
+                    <div class="metric-card">
+                        <span>Empirical Î(X;Y)</span>
+                        <strong>—</strong>
+                        <small>estimated from this run</small>
+                    </div>
+                    <div class="metric-card metric-card-capacity">
+                        <span>Capacity</span>
+                        <strong>—</strong>
+                        <small>bits per channel use</small>
+                    </div>
+                </div>
+
+                <div class="visualization-card transmission-visualization-card">
+                    <div class="visualization-heading-row">
+                        <div>
+                            <h3>Bit-by-bit transmission</h3>
+                            <p>
+                                Changed output bits are highlighted. For long messages the view wraps
+                                automatically instead of extending beyond the page.
+                            </p>
+                        </div>
+
+                        <div class="transmission-legend" aria-label="Transmission legend">
+                            <span><i class="legend-bit legend-bit-normal"></i> unchanged</span>
+                            <span><i class="legend-bit legend-bit-error"></i> flipped</span>
+                        </div>
+                    </div>
+
+                    <div class="bit-stream-pair">
+                        <div class="bit-stream-row">
+                            <span class="bit-stream-label">Input</span>
+                            <div class="bit-stream" id="input-bit-stream">
+                                <span class="bit-stream-placeholder">Transmit a message to display the input bits.</span>
+                            </div>
+                        </div>
+
+                        <div class="bit-stream-row">
+                            <span class="bit-stream-label">Output</span>
+                            <div class="bit-stream" id="output-bit-stream">
+                                <span class="bit-stream-placeholder">The noisy output will appear here.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visualization-card">
+                    <h3>Observed transition counts</h3>
+                    <p>
+                        This table shows how many times each input/output pair occurred in
+                        the latest simulated transmission.
+                    </p>
+
+                    <div class="observed-transition-grid" id="observed-transition-grid">
+                        <div class="observed-transition-card">
+                            <span>0 → 0</span>
+                            <strong id="observed-00">—</strong>
+                            <small>correct zero</small>
+                        </div>
+                        <div class="observed-transition-card">
+                            <span>0 → 1</span>
+                            <strong id="observed-01">—</strong>
+                            <small>zero flipped</small>
+                        </div>
+                        <div class="observed-transition-card">
+                            <span>1 → 0</span>
+                            <strong id="observed-10">—</strong>
+                            <small>one flipped</small>
+                        </div>
+                        <div class="observed-transition-card">
+                            <span>1 → 1</span>
+                            <strong id="observed-11">—</strong>
+                            <small>correct one</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="back-home-section" aria-label="Back to main page">
+                <a href="../index.html" class="back-home-button">
+                    Back to Main Page
+                </a>
+            </section>
+
+            <section class="content-section" id="sources">
+                <div class="section-heading">
+                    <p class="section-label">Sources</p>
+                    <h2>Materials used</h2>
+                    <p class="section-description">
+                        References used for mutual information, noisy channels and
+                        Binary Symmetric Channel capacity.
+                    </p>
+                </div>
+
+                <div class="source-grid">
+                    <a
+                        href="https://ocw.mit.edu/courses/6-441-information-theory-spring-2010/resources/mit6_441s10_lec08/"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">01</span>
+                        <h3>MIT 6.441 — Lecture 8</h3>
+                        <p>
+                            Channel capacity, Binary Symmetric Channels, erasure channels
+                            and capacity maximization.
+                        </p>
+                    </a>
+
+                    <a
+                        href="https://ocw.mit.edu/courses/6-050j-information-and-entropy-spring-2008/resources/mit6_050js08_textbook/"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">02</span>
+                        <h3>MIT 6.050J — Information and Entropy</h3>
+                        <p>
+                            Textbook treatment of mutual information and noisy channel capacity.
+                        </p>
+                    </a>
+
+                    <a
+                        href="https://web.stanford.edu/class/ee276/files/previous_notes/lecture_7.pdf"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">03</span>
+                        <h3>Stanford EE276 — Channel Capacity</h3>
+                        <p>
+                            Information-theory notes defining capacity as maximum mutual
+                            information and using the Binary Symmetric Channel as an example.
+                        </p>
+                    </a>
+
+                    <a
+                        href="https://boole.bsite.net/"
+                        class="source-card"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span class="source-number">04</span>
+                        <h3>Information Theory Course Website</h3>
+                        <p>
+                            Main course website and context for the preceding student projects.
+                        </p>
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        Project 5 · Information Theory · Ales Zhirnel
+    </footer>
+</body>
+</html>
