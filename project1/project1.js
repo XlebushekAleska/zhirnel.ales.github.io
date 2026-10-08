@@ -1,6 +1,7 @@
 "use strict";
 
 const MAX_FACTORIAL_INPUT = 200;
+const MAX_BINOMIAL_INPUT = 30;
 const MAX_COMBINATION_INPUT = 500;
 
 function getElement(id) {
@@ -16,6 +17,12 @@ function readInteger(id) {
     }
 
     return value;
+}
+
+function validateRange(value, min, max, label) {
+    if (value < min || value > max) {
+        throw new Error(`${label} must be between ${min} and ${max}.`);
+    }
 }
 
 function factorialBigInt(n) {
@@ -46,19 +53,46 @@ function combinationBigInt(n, k) {
         return 0n;
     }
 
-    let effectiveK = Math.min(k, n - k);
+    const effectiveK = Math.min(k, n - k);
     let result = 1n;
 
     for (let i = 1; i <= effectiveK; i += 1) {
-        result = (result * BigInt(n - effectiveK + i)) / BigInt(i);
+        result =
+            (result * BigInt(n - effectiveK + i))
+            /
+            BigInt(i);
     }
 
     return result;
 }
 
 function formatBigInt(value) {
-    const text = value.toString();
-    return text.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return value
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function factorialProduct(n) {
+    if (n === 0 || n === 1) {
+        return "1";
+    }
+
+    const factors = [];
+
+    for (let value = n; value >= 1; value -= 1) {
+        factors.push(String(value));
+    }
+
+    return factors.join(" × ");
 }
 
 function setResult(id, html, isError = false) {
@@ -67,10 +101,27 @@ function setResult(id, html, isError = false) {
     result.classList.toggle("error", isError);
 }
 
-function validateRange(value, min, max, label) {
-    if (value < min || value > max) {
-        throw new Error(`${label} must be between ${min} and ${max}.`);
-    }
+function calculationSteps(steps) {
+    return `
+        <div class="calculation-breakdown">
+            ${steps.map((step, index) => `
+                <div class="calculation-step">
+                    <span class="calculation-step-label">
+                        Step ${index + 1}${step.label ? ` · ${escapeHtml(step.label)}` : ""}
+                    </span>
+
+                    <code class="calculation-formula">
+                        ${step.formula}
+                    </code>
+
+                    ${step.note
+                        ? `<p class="calculation-note">${escapeHtml(step.note)}</p>`
+                        : ""
+                    }
+                </div>
+            `).join("")}
+        </div>
+    `;
 }
 
 function calculateProbability() {
@@ -98,64 +149,96 @@ function calculateProbability() {
         setResult(
             "probability-result",
             `
-                <strong>P = ${favorable} / ${total}</strong><br>
-                Reduced fraction: <strong>${reducedNumerator.toString()} / ${reducedDenominator.toString()}</strong><br>
-                Decimal: <strong>${decimal.toFixed(6)}</strong><br>
-                Percentage: <strong>${percent.toFixed(2)}%</strong>
+                <div class="result-headline">
+                    <span>Probability</span>
+                    <strong>${percent.toFixed(2)}%</strong>
+                </div>
+
+                ${calculationSteps([
+                    {
+                        label: "formula",
+                        formula: "P(A) = |A| / |Ω|"
+                    },
+                    {
+                        label: "substitution",
+                        formula: `P(A) = ${favorable} / ${total}`
+                    },
+                    {
+                        label: "reduce the fraction",
+                        formula:
+                            `${favorable} / ${total}`
+                            + ` = ${reducedNumerator} / ${reducedDenominator}`
+                    },
+                    {
+                        label: "decimal form",
+                        formula:
+                            `${reducedNumerator} / ${reducedDenominator}`
+                            + ` = ${decimal.toFixed(6)}`
+                    },
+                    {
+                        label: "percentage",
+                        formula:
+                            `${decimal.toFixed(6)} × 100%`
+                            + ` = ${percent.toFixed(2)}%`
+                    }
+                ])}
             `
         );
     } catch (error) {
-        setResult("probability-result", error.message, true);
-    }
-}
-
-function calculateFactorial() {
-    try {
-        const n = readInteger("factorial-n");
-        validateRange(n, 0, MAX_FACTORIAL_INPUT, "n");
-
-        const result = factorialBigInt(n);
-
-        setResult(
-            "factorial-result",
-            `
-                <strong>${n}! = ${formatBigInt(result)}</strong><br>
-                <span class="muted">The result is calculated exactly with BigInt.</span>
-            `
-        );
-    } catch (error) {
-        setResult("factorial-result", error.message, true);
+        setResult("probability-result", escapeHtml(error.message), true);
     }
 }
 
 function calculatePermutations() {
     try {
         const n = readInteger("permutation-n");
+
         validateRange(n, 0, MAX_FACTORIAL_INPUT, "Number of objects");
 
         const result = factorialBigInt(n);
+        const expanded = factorialProduct(n);
 
         setResult(
             "permutation-result",
             `
-                For <strong>${n}</strong> different objects:<br>
-                <strong>Permutations = ${n}! = ${formatBigInt(result)}</strong>
+                <div class="result-headline">
+                    <span>Permutations</span>
+                    <strong>${formatBigInt(result)}</strong>
+                </div>
+
+                ${calculationSteps([
+                    {
+                        label: "permutation formula",
+                        formula: `P<sub>${n}</sub> = ${n}!`
+                    },
+                    {
+                        label: "expand the factorial",
+                        formula: `${n}! = ${expanded}`
+                    },
+                    {
+                        label: "multiply",
+                        formula: `${expanded} = ${formatBigInt(result)}`
+                    }
+                ])}
             `
         );
     } catch (error) {
-        setResult("permutation-result", error.message, true);
+        setResult("permutation-result", escapeHtml(error.message), true);
     }
 }
 
 function getCharacterCounts(text) {
     const normalized = text
-        .replace(/\s+/g, "")
+        .replace(/\s+/gu, "")
         .toUpperCase();
 
     const counts = new Map();
 
     for (const character of Array.from(normalized)) {
-        counts.set(character, (counts.get(character) || 0) + 1);
+        counts.set(
+            character,
+            (counts.get(character) || 0) + 1
+        );
     }
 
     return {
@@ -168,45 +251,205 @@ function calculateRepeatedObjects() {
     try {
         const input = getElement("repeated-word").value;
         const { normalized, counts } = getCharacterCounts(input);
+        const totalLetters = Array.from(normalized).length;
 
-        if (normalized.length === 0) {
+        if (totalLetters === 0) {
             throw new Error("Please enter a word or sequence.");
         }
 
-        validateRange(normalized.length, 1, MAX_FACTORIAL_INPUT, "Sequence length");
+        validateRange(totalLetters, 1, MAX_FACTORIAL_INPUT, "Sequence length");
 
-        const totalLetters = normalized.length;
+        const repeatedGroups =
+            [...counts.entries()]
+                .filter(([, count]) => count > 1);
+
         let denominator = 1n;
-        const repeatedParts = [];
 
-        for (const [character, count] of counts.entries()) {
-            if (count > 1) {
-                repeatedParts.push(`${character}: ${count}`);
-            }
-
+        for (const [, count] of counts.entries()) {
             denominator *= factorialBigInt(count);
         }
 
         const numerator = factorialBigInt(totalLetters);
         const result = numerator / denominator;
 
-        const repeatedText = repeatedParts.length > 0
-            ? repeatedParts.join(", ")
-            : "No repeated characters";
+        const denominatorFormula =
+            repeatedGroups.length > 0
+                ? repeatedGroups
+                    .map(([, count]) => `${count}!`)
+                    .join(" × ")
+                : "1";
+
+        const denominatorExpansion =
+            repeatedGroups.length > 0
+                ? repeatedGroups
+                    .map(([, count]) => `(${factorialProduct(count)})`)
+                    .join(" × ")
+                : "1";
+
+        const groupDescription =
+            repeatedGroups.length > 0
+                ? repeatedGroups
+                    .map(([character, count]) =>
+                        `${escapeHtml(character)} × ${count}`
+                    )
+                    .join(", ")
+                : "No repeated characters";
 
         setResult(
             "repeated-result",
             `
-                Sequence: <strong>${normalized}</strong><br>
-                Length: <strong>${totalLetters}</strong><br>
-                Repeated groups: <strong>${repeatedText}</strong><br>
-                Formula: <strong>${totalLetters}! / repeated factorials</strong><br>
-                Result: <strong>${formatBigInt(result)}</strong>
+                <div class="result-headline">
+                    <span>Distinct arrangements</span>
+                    <strong>${formatBigInt(result)}</strong>
+                </div>
+
+                <p class="result-context">
+                    Sequence:
+                    <strong>${escapeHtml(normalized)}</strong><br>
+                    Repeated groups:
+                    <strong>${groupDescription}</strong>
+                </p>
+
+                ${calculationSteps([
+                    {
+                        label: "general formula",
+                        formula: "N = n! / (m₁! × m₂! × ... × mᵣ!)"
+                    },
+                    {
+                        label: "substitute multiplicities",
+                        formula:
+                            `N = ${totalLetters}! / (${denominatorFormula})`
+                    },
+                    {
+                        label: "expand factorials",
+                        formula:
+                            `N = (${factorialProduct(totalLetters)})`
+                            + ` / (${denominatorExpansion})`
+                    },
+                    {
+                        label: "evaluate numerator and denominator",
+                        formula:
+                            `N = ${formatBigInt(numerator)}`
+                            + ` / ${formatBigInt(denominator)}`
+                    },
+                    {
+                        label: "divide",
+                        formula: `N = ${formatBigInt(result)}`
+                    }
+                ])}
             `
         );
     } catch (error) {
-        setResult("repeated-result", error.message, true);
+        setResult("repeated-result", escapeHtml(error.message), true);
     }
+}
+
+function buildPascalRows(n) {
+    const rows = [];
+
+    for (let rowIndex = 0; rowIndex <= n; rowIndex += 1) {
+        const row = [];
+
+        for (let column = 0; column <= rowIndex; column += 1) {
+            if (column === 0 || column === rowIndex) {
+                row.push(1n);
+            } else {
+                row.push(
+                    rows[rowIndex - 1][column - 1]
+                    +
+                    rows[rowIndex - 1][column]
+                );
+            }
+        }
+
+        rows.push(row);
+    }
+
+    return rows;
+}
+
+function renderPascalTriangle(n, k) {
+    const rows = buildPascalRows(n);
+    const triangle = getElement("pascal-triangle");
+
+    triangle.innerHTML =
+        rows.map((row, rowIndex) => {
+            const cells =
+                row.map((value, column) => {
+                    const isTarget =
+                        rowIndex === n
+                        &&
+                        column === k;
+
+                    const isDirectParent =
+                        rowIndex === n - 1
+                        &&
+                        (
+                            column === k - 1
+                            ||
+                            column === k
+                        );
+
+                    let origin = "";
+
+                    if (
+                        rowIndex > 0
+                        &&
+                        column > 0
+                        &&
+                        column < rowIndex
+                    ) {
+                        const left = rows[rowIndex - 1][column - 1];
+                        const right = rows[rowIndex - 1][column];
+
+                        origin = `
+                            <small class="pascal-cell-origin">
+                                ${formatBigInt(left)} + ${formatBigInt(right)}
+                            </small>
+                        `;
+                    }
+
+                    const classes = [
+                        "pascal-cell",
+                        isTarget ? "is-target" : "",
+                        isDirectParent ? "is-parent" : ""
+                    ]
+                        .filter(Boolean)
+                        .join(" ");
+
+                    return `
+                        <div
+                            class="${classes}"
+                            title="C(${rowIndex}, ${column}) = ${value}"
+                            aria-label="C(${rowIndex}, ${column}) equals ${value}"
+                        >
+                            <span class="pascal-cell-index">
+                                C(${rowIndex},${column})
+                            </span>
+
+                            <strong>
+                                ${formatBigInt(value)}
+                            </strong>
+
+                            ${origin}
+                        </div>
+                    `;
+                }).join("");
+
+            return `
+                <div class="pascal-row">
+                    ${cells}
+                </div>
+            `;
+        }).join("");
+
+    getElement("pascal-target-summary").innerHTML =
+        `
+            <span>Highlighted coefficient</span>
+            <strong>
+                C(${n},${k}) = ${formatBigInt(rows[n][k])}
+            </strong>
+        `;
 }
 
 function calculateBinomial() {
@@ -214,24 +457,102 @@ function calculateBinomial() {
         const n = readInteger("binomial-n");
         const k = readInteger("binomial-k");
 
-        validateRange(n, 0, MAX_COMBINATION_INPUT, "n");
-        validateRange(k, 0, MAX_COMBINATION_INPUT, "k");
+        validateRange(n, 0, MAX_BINOMIAL_INPUT, "n");
+        validateRange(k, 0, MAX_BINOMIAL_INPUT, "k");
 
         if (k > n) {
             throw new Error("k cannot be greater than n.");
         }
 
         const result = combinationBigInt(n, k);
+        const nFactorial = factorialBigInt(n);
+        const kFactorial = factorialBigInt(k);
+
+        const difference = n - k;
+        const differenceFactorial = factorialBigInt(difference);
+        const denominator = kFactorial * differenceFactorial;
+
+        const rows = buildPascalRows(n);
+
+        let pascalStep;
+
+        if (k === 0 || k === n) {
+            pascalStep = `C(${n},${k}) = 1`;
+        } else {
+            const left = rows[n - 1][k - 1];
+            const right = rows[n - 1][k];
+
+            pascalStep =
+                `C(${n},${k})`
+                + ` = C(${n - 1},${k - 1})`
+                + ` + C(${n - 1},${k})`
+                + ` = ${formatBigInt(left)}`
+                + ` + ${formatBigInt(right)}`
+                + ` = ${formatBigInt(result)}`;
+        }
 
         setResult(
             "binomial-result",
             `
-                <strong>C(${n}, ${k}) = ${formatBigInt(result)}</strong><br>
-                Formula: n! / (k! × (n - k)!)
+                <div class="result-headline">
+                    <span>Binomial coefficient</span>
+                    <strong>
+                        C(${n},${k}) = ${formatBigInt(result)}
+                    </strong>
+                </div>
+
+                ${calculationSteps([
+                    {
+                        label: "factorial formula",
+                        formula:
+                            `C(${n},${k})`
+                            + ` = ${n}! / (${k}! × ${difference}!)`
+                    },
+                    {
+                        label: "expand every factorial",
+                        formula:
+                            `C(${n},${k})`
+                            + ` = (${factorialProduct(n)})`
+                            + ` / ((${factorialProduct(k)})`
+                            + ` × (${factorialProduct(difference)}))`
+                    },
+                    {
+                        label: "evaluate factorials",
+                        formula:
+                            `C(${n},${k})`
+                            + ` = ${formatBigInt(nFactorial)}`
+                            + ` / (${formatBigInt(kFactorial)}`
+                            + ` × ${formatBigInt(differenceFactorial)})`
+                    },
+                    {
+                        label: "evaluate denominator",
+                        formula:
+                            `C(${n},${k})`
+                            + ` = ${formatBigInt(nFactorial)}`
+                            + ` / ${formatBigInt(denominator)}`
+                    },
+                    {
+                        label: "divide",
+                        formula:
+                            `C(${n},${k}) = ${formatBigInt(result)}`
+                    },
+                    {
+                        label: "same value from Pascal's triangle",
+                        formula: pascalStep
+                    }
+                ])}
             `
         );
+
+        renderPascalTriangle(n, k);
     } catch (error) {
-        setResult("binomial-result", error.message, true);
+        setResult("binomial-result", escapeHtml(error.message), true);
+
+        getElement("pascal-triangle").innerHTML =
+            `<div class="pascal-error">${escapeHtml(error.message)}</div>`;
+
+        getElement("pascal-target-summary").textContent =
+            "Enter valid n and k";
     }
 }
 
@@ -247,170 +568,268 @@ function calculateTeamSelection() {
             throw new Error("Team size cannot be greater than total players.");
         }
 
-        const result = combinationBigInt(total, selected);
+        const difference = total - selected;
+
+        const totalFactorial = factorialBigInt(total);
+        const selectedFactorial = factorialBigInt(selected);
+        const differenceFactorial = factorialBigInt(difference);
+
+        const denominator =
+            selectedFactorial
+            *
+            differenceFactorial;
+
+        const result =
+            combinationBigInt(total, selected);
 
         setResult(
             "team-result",
             `
-                Number of possible teams:<br>
-                <strong>C(${total}, ${selected}) = ${formatBigInt(result)}</strong>
+                <div class="result-headline">
+                    <span>Possible teams</span>
+                    <strong>${formatBigInt(result)}</strong>
+                </div>
+
+                ${calculationSteps([
+                    {
+                        label: "combination formula",
+                        formula:
+                            `Teams = C(${total},${selected})`
+                            + ` = ${total}!`
+                            + ` / (${selected}! × ${difference}!)`
+                    },
+                    {
+                        label: "expand factorials",
+                        formula:
+                            `Teams = (${factorialProduct(total)})`
+                            + ` / ((${factorialProduct(selected)})`
+                            + ` × (${factorialProduct(difference)}))`
+                    },
+                    {
+                        label: "evaluate factorials",
+                        formula:
+                            `Teams = ${formatBigInt(totalFactorial)}`
+                            + ` / (${formatBigInt(selectedFactorial)}`
+                            + ` × ${formatBigInt(differenceFactorial)})`
+                    },
+                    {
+                        label: "evaluate denominator",
+                        formula:
+                            `Teams = ${formatBigInt(totalFactorial)}`
+                            + ` / ${formatBigInt(denominator)}`
+                    },
+                    {
+                        label: "divide",
+                        formula:
+                            `Teams = ${formatBigInt(result)}`
+                    }
+                ])}
             `
         );
     } catch (error) {
-        setResult("team-result", error.message, true);
+        setResult("team-result", escapeHtml(error.message), true);
     }
+}
+
+function normalizeVowelSet(rawValue) {
+    return new Set(
+        Array.from(
+            rawValue
+                .toUpperCase()
+                .replace(/[\s,;|/]+/gu, "")
+        )
+    );
 }
 
 function calculateGalois() {
     try {
-        const input = getElement("galois-word").value;
-        const vowelsInput = getElement("galois-vowels").value;
+        const rawWord = getElement("galois-word").value;
 
-        const normalized = input
-            .toUpperCase()
-            .replace(/[^A-Z]/g, "");
+        const normalized =
+            rawWord
+                .replace(/\s+/gu, "")
+                .toUpperCase();
 
-        const vowelsText = vowelsInput
-            .toUpperCase()
-            .replace(/[^A-Z]/g, "");
+        const characters = Array.from(normalized);
 
-        if (normalized.length === 0) {
-            throw new Error("Please enter at least one English letter.");
+        if (characters.length === 0) {
+            throw new Error("Please enter a word or sequence.");
         }
 
-        if (vowelsText.length === 0) {
-            throw new Error("Please enter at least one vowel.");
-        }
-
-        validateRange(normalized.length, 1, MAX_FACTORIAL_INPUT, "Word length");
-
-        const vowelSet = new Set(Array.from(vowelsText));
-        const letterCounts = new Map();
-
-        let vowelCount = 0;
-        let consonantCount = 0;
-
-        for (const character of Array.from(normalized)) {
-            letterCounts.set(
-                character,
-                (letterCounts.get(character) || 0) + 1
-            );
-
-            if (vowelSet.has(character)) {
-                vowelCount += 1;
-            } else {
-                consonantCount += 1;
-            }
-        }
-
-        const totalLetters = normalized.length;
-
-        const totalPositionArrangements = factorialBigInt(totalLetters);
-        const favorablePositionArrangements =
-            factorialBigInt(vowelCount) * factorialBigInt(consonantCount);
-
-        const divisor = gcdBigInt(
-            favorablePositionArrangements,
-            totalPositionArrangements
+        validateRange(
+            characters.length,
+            1,
+            MAX_FACTORIAL_INPUT,
+            "Sequence length"
         );
 
-        const reducedNumerator = favorablePositionArrangements / divisor;
-        const reducedDenominator = totalPositionArrangements / divisor;
+        const vowelSet =
+            normalizeVowelSet(
+                getElement("galois-vowels").value
+            );
 
-        const percentage =
-            Number(
-                (favorablePositionArrangements * 1000000n)
-                / totalPositionArrangements
-            ) / 10000;
+        let vowels = 0;
 
-        let allRepeatedDenominator = 1n;
-        let vowelRepeatedDenominator = 1n;
-        let consonantRepeatedDenominator = 1n;
-
-        for (const [character, count] of letterCounts.entries()) {
-            const repeatedFactorial = factorialBigInt(count);
-
-            allRepeatedDenominator *= repeatedFactorial;
-
+        for (const character of characters) {
             if (vowelSet.has(character)) {
-                vowelRepeatedDenominator *= repeatedFactorial;
-            } else {
-                consonantRepeatedDenominator *= repeatedFactorial;
+                vowels += 1;
             }
         }
 
-        const totalDistinctArrangements =
-            totalPositionArrangements / allRepeatedDenominator;
+        const consonants =
+            characters.length - vowels;
 
-        const favorableDistinctArrangements =
-            (factorialBigInt(vowelCount) / vowelRepeatedDenominator)
-            * (factorialBigInt(consonantCount) / consonantRepeatedDenominator);
+        const totalCount =
+            characters.length;
+
+        const vowelFactorial =
+            factorialBigInt(vowels);
+
+        const consonantFactorial =
+            factorialBigInt(consonants);
+
+        const totalFactorial =
+            factorialBigInt(totalCount);
+
+        const favorable =
+            vowelFactorial
+            *
+            consonantFactorial;
+
+        const divisor =
+            gcdBigInt(
+                favorable,
+                totalFactorial
+            );
+
+        const reducedNumerator =
+            favorable / divisor;
+
+        const reducedDenominator =
+            totalFactorial / divisor;
+
+        /*
+         * Use the reduced fraction for the floating-point percentage.
+         * This avoids Infinity / Infinity for long sequences, because
+         * factorials such as 200! are larger than JavaScript Number.
+         */
+        const probability =
+            Number(reducedNumerator)
+            /
+            Number(reducedDenominator);
+
+        const percentage =
+            probability * 100;
+
+        const chooseGroups =
+            combinationBigInt(
+                totalCount,
+                vowels
+            );
 
         setResult(
             "galois-result",
             `
-                Word: <strong>${normalized}</strong><br>
-                Vowels: <strong>${vowelCount}</strong>,
-                consonants: <strong>${consonantCount}</strong><br><br>
+                <div class="result-headline">
+                    <span>Required probability</span>
+                    <strong>${percentage.toFixed(4)}%</strong>
+                </div>
 
-                Total position arrangements:
-                <strong>${totalLetters}! = ${formatBigInt(totalPositionArrangements)}</strong><br>
+                <p class="result-context">
+                    Sequence:
+                    <strong>${escapeHtml(normalized)}</strong><br>
+                    Vowels:
+                    <strong>${vowels}</strong>;
+                    other characters:
+                    <strong>${consonants}</strong>
+                </p>
 
-                Favorable position arrangements:
-                <strong>${vowelCount}! × ${consonantCount}! =
-                ${formatBigInt(favorablePositionArrangements)}</strong><br><br>
-
-                Probability:
-                <strong>${formatBigInt(favorablePositionArrangements)}
-                / ${formatBigInt(totalPositionArrangements)}</strong><br>
-
-                Reduced fraction:
-                <strong>${reducedNumerator.toString()}
-                / ${reducedDenominator.toString()}</strong><br>
-
-                Percentage:
-                <strong>${percentage.toFixed(4)}%</strong><br><br>
-
-                Distinct written arrangements:
-                <strong>${formatBigInt(totalDistinctArrangements)}</strong><br>
-
-                Distinct favorable arrangements:
-                <strong>${formatBigInt(favorableDistinctArrangements)}</strong>
+                ${calculationSteps([
+                    {
+                        label: "general formula",
+                        formula: "P = (V! × C!) / (V + C)!"
+                    },
+                    {
+                        label: "substitute group sizes",
+                        formula:
+                            `P = (${vowels}! × ${consonants}!)`
+                            + ` / ${totalCount}!`
+                    },
+                    {
+                        label: "expand factorials",
+                        formula:
+                            `P = ((${factorialProduct(vowels)})`
+                            + ` × (${factorialProduct(consonants)}))`
+                            + ` / (${factorialProduct(totalCount)})`
+                    },
+                    {
+                        label: "evaluate factorials",
+                        formula:
+                            `P = (${formatBigInt(vowelFactorial)}`
+                            + ` × ${formatBigInt(consonantFactorial)})`
+                            + ` / ${formatBigInt(totalFactorial)}`
+                            + ` = ${formatBigInt(favorable)}`
+                            + ` / ${formatBigInt(totalFactorial)}`
+                    },
+                    {
+                        label: "reduce",
+                        formula:
+                            `P = ${reducedNumerator}`
+                            + ` / ${reducedDenominator}`
+                            + ` = 1 / C(${totalCount},${vowels})`
+                            + ` = 1 / ${formatBigInt(chooseGroups)}`
+                    },
+                    {
+                        label: "percentage",
+                        formula:
+                            `P = ${percentage.toFixed(4)}%`
+                    }
+                ])}
             `
         );
     } catch (error) {
-        setResult("galois-result", error.message, true);
+        setResult("galois-result", escapeHtml(error.message), true);
     }
 }
 
 function enableNavigationWheelScroll() {
-    const navigation = document.querySelector(".project-navigation");
+    const navigation =
+        document.querySelector(".project-navigation");
 
     if (!navigation) {
         return;
     }
 
-    navigation.addEventListener("wheel", function (event) {
-        const canScrollHorizontally = navigation.scrollWidth > navigation.clientWidth;
+    navigation.addEventListener(
+        "wheel",
+        function (event) {
+            const canScrollHorizontally =
+                navigation.scrollWidth
+                >
+                navigation.clientWidth;
 
-        if (!canScrollHorizontally) {
-            return;
-        }
+            if (!canScrollHorizontally) {
+                return;
+            }
 
-        event.preventDefault();
+            event.preventDefault();
 
-        const scrollAmount = Math.abs(event.deltaX) > Math.abs(event.deltaY)
-            ? event.deltaX
-            : event.deltaY;
+            const scrollAmount =
+                Math.abs(event.deltaX)
+                >
+                Math.abs(event.deltaY)
+                    ? event.deltaX
+                    : event.deltaY;
 
-        navigation.scrollLeft += scrollAmount;
-    }, { passive: false });
+            navigation.scrollLeft += scrollAmount;
+        },
+        { passive: false }
+    );
 }
 
 function attachCalculatorEvents() {
     const bindings = [
         ["probability-button", calculateProbability],
-        ["factorial-button", calculateFactorial],
         ["permutation-button", calculatePermutations],
         ["repeated-button", calculateRepeatedObjects],
         ["binomial-button", calculateBinomial],
@@ -429,7 +848,6 @@ function attachCalculatorEvents() {
 
 function calculateDefaultValues() {
     calculateProbability();
-    calculateFactorial();
     calculatePermutations();
     calculateRepeatedObjects();
     calculateBinomial();
@@ -437,8 +855,11 @@ function calculateDefaultValues() {
     calculateGalois();
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    attachCalculatorEvents();
-    enableNavigationWheelScroll();
-    calculateDefaultValues();
-});
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+        attachCalculatorEvents();
+        enableNavigationWheelScroll();
+        calculateDefaultValues();
+    }
+);
