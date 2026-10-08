@@ -5609,3 +5609,50 @@ footer {
         align-self: flex-start;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* =========================================================
+   PROJECT 2 — STACKED THEORY + CALCULATOR LAYOUT
+   ========================================================= */
+
+.project2-page .section-grid {
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+
+/*
+   Always place explanation / example first,
+   calculator second.
+*/
+.project2-page .section-grid > .theory-card {
+    order: 1;
+}
+
+.project2-page .section-grid > .calculator-card {
+    order: 2;
+}
+
+
+/*
+   Both cards use the whole available width.
+*/
+.project2-page .section-grid > .theory-card,
+.project2-page .section-grid > .calculator-card {
+    width: 100%;
+    max-width: 100%;
+}
