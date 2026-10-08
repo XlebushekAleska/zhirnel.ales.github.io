@@ -1027,6 +1027,356 @@ footer {
 }
 
 
+/* =========================================================
+   PROJECT 1 — FORMULA BREAKDOWNS + PASCAL TRIANGLE
+   ========================================================= */
+
+/* ---------- Detailed calculator outputs ---------- */
+
+.result-headline {
+    margin-bottom: 0.9rem;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+}
+
+.result-headline span {
+    color: var(--secondary-text);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.result-headline strong {
+    color: var(--accent-dark);
+    font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+}
+
+.result-context {
+    margin: 0 0 0.9rem;
+    color: var(--secondary-text);
+    line-height: 1.65;
+}
+
+.calculation-breakdown {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.calculation-step {
+    min-width: 0;
+    padding: 0.8rem 0.9rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 0.9rem;
+
+    background-color:
+        rgba(255, 255, 255, 0.56);
+}
+
+.calculation-step-label {
+    display: block;
+    margin-bottom: 0.4rem;
+
+    color: var(--accent);
+
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.calculation-formula {
+    display: block;
+
+    width: 100%;
+    max-width: 100%;
+
+    padding-bottom: 0.15rem;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    color: var(--main-text);
+
+    font-size: clamp(0.83rem, 1.6vw, 0.98rem);
+    line-height: 1.7;
+
+    white-space: nowrap;
+
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(95, 110, 232, 0.38)
+        transparent;
+}
+
+.calculation-formula::-webkit-scrollbar {
+    height: 0.35rem;
+}
+
+.calculation-formula::-webkit-scrollbar-thumb {
+    border-radius: 999rem;
+    background-color: rgba(95, 110, 232, 0.38);
+}
+
+.calculation-note {
+    margin: 0.45rem 0 0;
+
+    color: var(--secondary-text);
+
+    font-size: 0.86rem;
+    line-height: 1.55;
+}
+
+
+/* ---------- Pascal triangle ---------- */
+
+.pascal-visualization {
+    margin-top: clamp(1rem, 2.2vw, 2rem);
+}
+
+.pascal-target-summary {
+    min-width: min(100%, 12rem);
+
+    padding: 0.8rem 1rem;
+
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.18);
+
+    border-radius: 1rem;
+
+    background-color: var(--accent-light);
+
+    text-align: center;
+}
+
+.pascal-target-summary span {
+    color: var(--secondary-text);
+
+    font-size: 0.7rem;
+    font-weight: 800;
+
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+}
+
+.pascal-target-summary strong {
+    color: var(--accent-dark);
+    font-size: 1.05rem;
+}
+
+.pascal-scroll {
+    width: 100%;
+    max-width: 100%;
+
+    margin-top: 1rem;
+
+    padding:
+        1.2rem
+        0.8rem
+        1rem;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.14);
+
+    border-radius: 1.2rem;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(246, 248, 255, 0.76),
+            rgba(255, 255, 255, 0.54)
+        );
+
+    scrollbar-width: thin;
+    scrollbar-color:
+        rgba(95, 110, 232, 0.42)
+        transparent;
+}
+
+.pascal-triangle {
+    width: max-content;
+    min-width: 100%;
+
+    display: grid;
+    gap: 0.42rem;
+}
+
+.pascal-row {
+    min-width: max-content;
+
+    display: flex;
+    justify-content: center;
+    gap: 0.42rem;
+}
+
+.pascal-cell {
+    width: 5.25rem;
+    min-width: 5.25rem;
+    min-height: 4.55rem;
+
+    padding: 0.45rem 0.35rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        0.08rem
+        solid
+        rgba(95, 110, 232, 0.16);
+
+    border-radius: 0.85rem;
+
+    background-color:
+        rgba(255, 255, 255, 0.9);
+
+    box-shadow:
+        0 0.35rem 0.9rem
+        rgba(64, 74, 130, 0.06);
+
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background-color 0.18s ease;
+}
+
+.pascal-cell:hover {
+    transform: translateY(-0.12rem);
+
+    border-color:
+        rgba(95, 110, 232, 0.42);
+
+    box-shadow:
+        0 0.55rem 1.2rem
+        rgba(64, 74, 130, 0.12);
+}
+
+.pascal-cell-index {
+    color: var(--secondary-text);
+
+    font-size: 0.64rem;
+    font-weight: 700;
+}
+
+.pascal-cell strong {
+    margin-top: 0.16rem;
+
+    color: var(--main-text);
+
+    font-size: 0.95rem;
+}
+
+.pascal-cell-origin {
+    margin-top: 0.18rem;
+
+    color: var(--secondary-text);
+
+    font-size: 0.62rem;
+    line-height: 1.2;
+}
+
+.pascal-cell.is-parent {
+    border-color:
+        rgba(82, 158, 235, 0.52);
+
+    background-color:
+        rgba(226, 244, 255, 0.94);
+}
+
+.pascal-cell.is-target {
+    border-color:
+        rgba(138, 89, 224, 0.72);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(226, 231, 255, 0.98),
+            rgba(241, 225, 255, 0.98)
+        );
+
+    box-shadow:
+        0 0.55rem 1.4rem
+        rgba(111, 87, 214, 0.2),
+        0 0 0 0.12rem
+        rgba(95, 110, 232, 0.1);
+}
+
+.pascal-cell.is-target strong {
+    color: var(--accent-dark);
+    font-size: 1.08rem;
+}
+
+.pascal-error {
+    width: 100%;
+
+    padding: 1rem;
+
+    color: #a12d49;
+
+    text-align: center;
+    font-weight: 700;
+}
+
+
+/* ---------- Project 1 responsive adjustments ---------- */
+
+@media (max-width: 58rem), (orientation: portrait) {
+    .pascal-visualization
+    .visualization-heading-row {
+        align-items: stretch;
+    }
+
+    .pascal-target-summary {
+        width: 100%;
+    }
+}
+
+@media (max-width: 30rem) {
+    .pascal-cell {
+        width: 4.6rem;
+        min-width: 4.6rem;
+        min-height: 4.25rem;
+    }
+
+    .pascal-cell strong {
+        font-size: 0.88rem;
+    }
+
+    .pascal-cell-origin {
+        font-size: 0.57rem;
+    }
+}
+
+
+
+
+
+
+
+
+
 
 /* ---------- Project 2 additions: status indicator ---------- */
 
